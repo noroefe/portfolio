@@ -12,4 +12,18 @@ Aqui, compartilho alguns dos meus projetos e análises que combinam estatística
 
 ## Projetos
 
+###  📊 Dashboard de Vendas Anuais
+
+Este repositório contém um dashboard de vendas anuais criado no Power BI em 2021 durante um treinamento da Data Science Academy.
+
+| **Descrição**                              | **Detalhes**                               |
+|--------------------------------------------|--------------------------------------------|
+| **Nome do Dashboard**                      | Dashboard de Vendas Anuais                 |
+| **Ferramenta Utilizada**                   | Power BI                                   |
+| **Ano de Criação**                         | 2021                                       |
+| **Objetivo**                               | Análise das Vendas anuais                  |
+| **Principais Funcionalidades**             | Visualizações interativas                  |
+| **URL do Dashboard**                       | [Acessar Dashboard](https://github.com/noroefe/portfolio/blob/main/Dashboard%20de%20Vendas%20-%201/dashboard_vendas_1.html)  |
+
+
 

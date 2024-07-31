@@ -13,6 +13,7 @@ Aqui, compartilho alguns dos meus projetos e análises que combinam estatística
 ## Projetos
 
 ###  📊 Dashboard de Vendas Anuais
+Dashboard de Vendas 1
 
 Este repositório contém um dashboard de vendas anuais criado no Power BI em 2021 durante um treinamento da Data Science Academy.
 
@@ -21,9 +22,24 @@ Este repositório contém um dashboard de vendas anuais criado no Power BI em 20
 | **Nome do Dashboard**                      | Dashboard de Vendas Anuais                 |
 | **Ferramenta Utilizada**                   | Power BI                                   |
 | **Ano de Criação**                         | 2021                                       |
-| **Objetivo**                               | Análise das Vendas anuais                  |
-| **Principais Funcionalidades**             | Visualizações interativas                  |
+| **Objetivo**                               | Análise das Vendas Anuais                  |
+| **Principais Funcionalidades**             | Visualizações Interativas                  |
 | **URL do Dashboard**                       | [Acessar Dashboard](https://github.com/noroefe/portfolio/blob/main/Dashboard%20de%20Vendas%20-%201/EstudoCaso1.pdf)  |
+
+###  📊 Dashboard de Vendas Detalhado
+Dashboard de Vendas 2
+
+Este repositório contém um dashboard de vendas criado no Power BI em 2021 durante um treinamento da Data Science Academy.
+
+| **Descrição**                              | **Detalhes**                               |
+|--------------------------------------------|--------------------------------------------|
+| **Nome do Dashboard**                      | Dashboard de Vendas Detalhado              |
+| **Ferramenta Utilizada**                   | Power BI                                   |
+| **Ano de Criação**                         | 2021                                       |
+| **Objetivo**                               | Análise das Vendas Detalhado               |
+| **Principais Funcionalidades**             | Visualizações Interativas                  |
+| **URL do Dashboard**                       | [Acessar Dashboard](https://github.com/noroefe/portfolio/blob/main/Dashboard%20de%20Vendas%20-%202/EstudoCaso2.pdf)  |
+
 
 
 

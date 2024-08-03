@@ -19,7 +19,6 @@ O resultado foi um protótipo funcional que oferece uma plataforma eficiente e i
 ## Diagrama de Entidade Relacionamento
 
 ![Diagrama de Entidade Relacionamento do Software Proposto](https://github.com/noroefe/portfolio/blob/main/sistema_sgppe/diagrama_er.png)
-Fonte: o autor (2023).
 
 ## Interface do Usuário
 

@@ -38,8 +38,8 @@ Desenvolvido durante meu Trabalho de Conclusão de Curso, consistiu na modelagem
 
 | **Descrição**                              | **Detalhes**                               |
 |--------------------------------------------|--------------------------------------------|
-| **Nome do Projeto  **                      | Sistema SGPPE                              |
-| **Ferramenta Utilizada**                   | [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Node.js](https://img.shields.io/badge/Node.js-v12.18.3-green.svg)](https://nodejs.org/) [![MySQL](https://img.shields.io/badge/SQL-MySQL-blue.svg)](https://www.mysql.com/) [![HTML](https://img.shields.io/badge/HTML-5-orange.svg)](https://developer.mozilla.org/en-US/docs/Web/HTML)|
+| **Nome do Projeto**                        | Sistema SGPPE                              |
+| **Ferramentas Utilizadas**                 | [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Node.js](https://img.shields.io/badge/Node.js-v12.18.3-green.svg)](https://nodejs.org/) [![MySQL](https://img.shields.io/badge/SQL-MySQL-blue.svg)](https://www.mysql.com/) [![HTML](https://img.shields.io/badge/HTML-5-orange.svg)](https://developer.mozilla.org/en-US/docs/Web/HTML)|
 | **Ano de Criação**                         | 2023 - 2024                                |
 | **Objetivo**                               | Resposta às dificuldades enfrentadas por pequenos negócios na gestão de projetos. |
 | **Principais Funcionalidades**             | Gestão de Projetos e Tarefas               |

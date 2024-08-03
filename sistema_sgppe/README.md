@@ -31,6 +31,10 @@ Fonte: o autor (2023).
 
 ![Tela Cadastro de Projetos](https://github.com/noroefe/portfolio/blob/main/sistema_sgppe/tela_novo_projeto.png)
 
+
+### Licença:
+Copyright (c) 2024 Fernando Schwartzhaupt Noroefé
+
 ## Instalação
 
 ### Pré-requisitos

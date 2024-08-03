@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>SGPPE - Sistema de Gerenciamento de Projetos para Pequenas Empresas</title>
+  <link rel="stylesheet" href="/public/headers.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/usuarios')
+    .then(response => response.json())
+    .then(usuarios => {
+        const selectUsuario = document.getElementById('usuarioIdTarefa');
+        usuarios.forEach(usuario => {
+            let option = document.createElement('option');
+            option.value = usuario.Matricula_id; // ID do usuário como valor
+            option.textContent = `${usuario.Nome} ${usuario.Sobrenome}`; // Nome para exibição
+            selectUsuario.appendChild(option);
+        });
+    })
+    .catch(error => console.error('Erro ao carregar usuários:', error));
+});
+
+
+  </script>
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+          fetch('/projetos')
+          .then(response => response.json())
+          .then(projetos => {
+              const selectProjeto = document.getElementById('projetoId');
+              projetos.forEach(projeto => {
+                  let option = document.createElement('option');
+                  option.value = projeto.idProjeto; // ID do usuário como valor
+                  option.textContent = `${projeto.idProjeto} ${projeto.NomeDoProjeto}`; // Nome para exibição
+                  selectProjeto .appendChild(option);
+              });
+          })
+          .catch(error => console.error('Erro ao carregar usuários:', error));
+      });
+      
+      
+        </script>
+
+
+
+
+
+
+</head>
+<body> 
+  <div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+      <div class="col-md-3 mb-2 mb-md-0">
+          <img src="../public/img/logo_png_azul.png" alt="SGPPE" width="126" height="62">
+      </div>
+
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="/public/projetos_abertos.html" class="nav-link px-2">Projetos em Aberto</a></li>
+        <li><a href="/public/projetos_encerrados.html" class="nav-link px-2">Projetos Encerrados</a></li>
+        <li><a href="/public/configuracoes.html" class="nav-link px-2">Configurações</a></li>
+      </ul>
+
+      <div class="col-md-3 text-end">
+        <form action="/logout" method="get">
+        <button type="submit" class="btn btn-outline-primary me-2">Sair</button>
+      </form>
+      </div>
+    </header>
+  </div>
+  <div class="container">
+    <div class="col-md-8">
+      <h3>Incluir Nova Tarefa</h3>
+      <p>Preencha o formulário abaixo e crie uma nova tarefa.</p>
+    </div>
+    <div class="container">
+      <form id="formTarefa" method="post" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+        <div class="form-group">
+                <label for="nomeDaTarefa">Nome da Tarefa:</label>
+                <input class="form-control" type="text" id="nomeDaTarefa" name="nomeDaTarefa" required>
+        </div> <br>
+        <div class="form-group">
+                <label for="usuarioIdTarefa">Responsável (Tarefa):</label>
+                <select class="form-control" id="usuarioIdTarefa" required></select>
+        </div> <br>
+        <div class="form-group">
+                <label for="situacaoTarefa">Situação da Tarefa:</label>
+                   <select  type="text" id="situacaoTarefa" name="situacaoTarefa" class="form-select"  required>
+                  <option value="Não Iniciada">Não Iniciada</option>
+                  <option value="Em Andamento">Em Andamento</option>
+                  <option value="Concluída">Concluída</option>
+                  <option value="Suspensa">Suspensa</option>
+                  </select>
+        </div> <br>
+        <div class="form-group">
+                <label for="projetoId">Projeto</label>
+                <select class="form-control" id="projetoId" required></select>
+        </div> <br>
+        <div class="form-group">
+                <label for="tipoTarefa">Tipo de Tarefa:</label>
+                <select type="text" id="tipoTarefa" name="tipoTarefa" class="form-select"  required>
+                  <option value="Início">Início</option>
+                  <option value="Planejamento">Planejamento</option>
+                  <option value="Execução">Execução</option>
+                  <option value="Monitoramento">Monitoramento</option>
+                  <option value="Encerramento">Encerramento</option>
+                </select>
+        </div> <br>
+        <div class="form-group">
+                <label for="descricao">Descrição:</label>
+                <textarea class="form-control" id="descricao" name="descricao" required></textarea>
+        </div> <br>
+        <div class="form-group">
+                <label for="prazoTarefa">Prazo da Tarefa:</label>
+                <input class="form-control" type="date" id="prazoTarefa" name="prazoTarefa" required>
+        </div> <br>
+        <div class="form-group">
+                <label for="excluida">Tarefa Excluída:</label>
+                <select class="form-control" id="excluida" name="excluida" required>
+                    <option value="Não">Não</option>
+                    <option value="Sim">Sim</option>
+                </select>
+        </div>
+         <br>
+                <button type="submit" class="btn btn-primary">Criar Tarefa</button>
+            </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+
+  </div>
+  <div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 SGPPE</p>
+
+    <p class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <img src="../public/img/logo_png_preto.png" alt="SGPPE" width="81" height="40">
+    </p>
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="/public/projetos_abertos.html" class="nav-link px-2 text-body-secondary">Projetos em Aberto</a></li>
+      <li class="nav-item"><a href="/public/projetos_encerrados.html" class="nav-link px-2 text-body-secondary">Projetos Encerrados</a></li>
+      <li class="nav-item"><a href="/public/configuracoes.html" class="nav-link px-2 text-body-secondary">Configurações</a></li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+  document.getElementById('formTarefa').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+   var dadosTarefa = {
+          nomeDaTarefa: document.getElementById('nomeDaTarefa').value,
+          usuarioIdTarefa: document.getElementById('usuarioIdTarefa').value,
+          situacaoTarefa: document.getElementById('situacaoTarefa').value,
+          projetoId: document.getElementById('projetoId').value,
+          tipoTarefa: document.getElementById('tipoTarefa').value,
+          descricao: document.getElementById('descricao').value,
+          prazoTarefa: document.getElementById('prazoTarefa').value,
+          excluida: document.getElementById('excluida').value
+      };
+
+  // Enviar solicitação para o servidor
+      fetch('/tarefa', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dadosTarefa),
+      })
+      .then(response => response.json())  // Primeiro converte a resposta para JSON
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.message);  // Se houver um campo de erro na resposta
+        }
+        console.log('Sucesso:', data);
+        alert('Tarefa criada com sucesso!');
+        window.location.href = "/public/projetos_abertos.html";
+        // Aqui você pode redirecionar a página ou atualizar a exibição
+        // Exemplo: window.location.href = '/nova-url'; ou window.location.reload();
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao criar tarefa');
+    });
+  });
+</script>
+
+
+
+  <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

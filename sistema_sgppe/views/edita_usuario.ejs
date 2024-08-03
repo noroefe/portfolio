@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>SGPPE - Sistema de Gerenciamento de Projetos para Pequenas Empresas</title>
+  <link rel="stylesheet" href="/public/headers.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+
+</head>
+<body> 
+  <div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+      <div class="col-md-3 mb-2 mb-md-0">
+          <img src="../public/img/logo_png_azul.png" alt="SGPPE" width="126" height="62">
+      </div>
+
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="/public/projetos_abertos.html" class="nav-link px-2">Projetos em Aberto</a></li>
+        <li><a href="/public/projetos_encerrados.html" class="nav-link px-2">Projetos Encerrados</a></li>
+        <li><a href="/public/configuracoes.html" class="nav-link px-2">Configurações</a></li>
+      </ul>
+
+      <div class="col-md-3 text-end">
+        <form action="/logout" method="get">
+        <button type="submit" class="btn btn-outline-primary me-2">Sair</button>
+      </form>
+      </div>
+    </header>
+  </div>
+  <div class="container">
+    <div class="col-md-8">
+      <h3>Editar Usuário</h3>
+      <p>Edite os dados abaixo e confirme para salvar suas alterações.</p>
+    </div>
+    <form  action="/editar-usuario" method="POST" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+      <div class="form-floating mb-3">
+        <input name="Matricula_id" id="Matricula_id" type="text" class="form-control"  placeholder="Matrícula"  value="<%= user.Matricula_id %>" readonly>
+        <label for="floatingInput">Matrícula</label>
+      </div>
+      
+      <div class="form-floating mb-3">
+        <input name="Nome" id="Nome" type="text" class="form-control"  placeholder="Nome"  value="<%= user.Nome %>" required>
+        <label for="floatingInput">Nome</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input name="Sobrenome"  id="Sobrenome" type="text" class="form-control"  placeholder="Sobrenome"  value="<%= user.Sobrenome %>" required>
+        <label for="floatingInput">Sobrenome</label>
+      </div>
+      <p>Cargo Atual: <%= user.Cargo %></p>
+      <p>Novo Cargo:</p>
+      <div class="form-floating mb-3">
+        <select name="Cargo" id="Cargo" class="form-select" placeholder="Cargo" value="<%= user.Cargo %>" required>
+              <option value="Gerente de Projetos">Gerente de Projetos</option>
+              <option value="Supervisor">Supervisor</option>
+              <option value="Administrativo">Administrativo</option>
+              <option value="Técnico">Técnico</option>
+              <option value="Produção">Produção</option>
+              <label for="floatingSelect">Cargo</label>
+        </select>
+        <div class="invalid-feedback">
+          Escolha uma opção válida
+        </div>
+        <br>
+      
+        <div class="form-floating mb-3">
+          <p>Edita Projetos?</p>
+          <p>Atual: <%= user.Edita_Projeto %></p>
+          <select name="Edita_Projeto" id="Edita_Projeto" class="form-select" placeholder="Edita Projeto?"  value="<%= user.Edita_Projeto %>" required>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+            <label for="floatingSelect">Edita Projeto?</label>
+          </select>
+          <div class="invalid-feedback">
+            Escolha uma opção válida
+          </div>
+  <br>
+          <div class="form-floating mb-3">
+            <p>Ativo?</p>
+            <p>Atual: <%= user.Ativo %></p>
+            <select name="Ativo" id="Ativo" class="form-select" placeholder="Ativo?"   value="<%= user.Ativo %>" required>
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+              <label for="floatingSelect">Ativo?</label>
+            </select>
+            <div class="invalid-feedback">
+              Escolha uma opção válida
+            </div>
+  
+    
+        </div>
+
+      <div class="form-floating mb-3">
+        <input name="Senha" id="Senha" type="password" class="form-control"  placeholder="Senha"  value="<%= user.Senha %>" required>
+        <label for="floatingPassword">Senha</label>
+      </div>
+      <button class="w-100 btn btn-lg btn-primary" type="submit"  value="Submit">Confirmar</button>
+    </form>
+    </div>
+  </div>
+  <div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 SGPPE</p>
+
+    <p class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <img src="../public/img/logo_png_preto.png" alt="SGPPE" width="81" height="40">
+    </p>
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="/public/projetos_abertos.html" class="nav-link px-2 text-body-secondary">Projetos em Aberto</a></li>
+      <li class="nav-item"><a href="/public/projetos_encerrados.html" class="nav-link px-2 text-body-secondary">Projetos Encerrados</a></li>
+      <li class="nav-item"><a href="/public/configuracoes.html" class="nav-link px-2 text-body-secondary">Configurações</a></li>
+    </ul>
+  </footer>
+</div>
+
+  <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

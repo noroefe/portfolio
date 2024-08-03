@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>SGPPE - Sistema de Gerenciamento de Projetos para Pequenas Empresas</title>
+  <link rel="stylesheet" href="/public/headers.css">
+  <link rel="stylesheet" href="/public/heroes.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+
+</head>
+<body> 
+      
+  <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-lg-5 py-5">
+      <div class="col-lg-7 text-center text-lg-start">
+        <div class="text-center">
+
+            <img src="img/logo_png_azul_home.png" class="img-fluid" alt="SGPPE" width="613" height="173">
+       
+        </div>
+        <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">Potencialize a Eficácia</h1>
+        <p class="col-lg-10 fs-4">Sistema de gerenciamento de projetos criado para atender às necessidades básicas de pequenas empresas. Com uma abordagem simplificada, oferece funcionalidades essenciais para o planejamento e execução eficientes de projetos.</p>
+      </div>
+      <div class="col-md-10 mx-auto col-lg-5">
+        
+        <form  action="/login" method="POST" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+          <div class="form-floating mb-3">
+            <input name="usuario" type="text" class="form-control" id="floatingInput" placeholder="Usuário"required>
+            <label for="floatingInput">Usuário</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input name="senha" type="password" class="form-control" id="floatingPassword" placeholder="Senha" required>
+            <label for="floatingPassword">Senha</label>
+          </div>
+          <button class="w-100 btn btn-lg btn-primary" type="submit"  value="Login">Entrar</button>
+          <hr class="my-4">
+          <small class="text-body-secondary">*Caso não esteja cadastrado ou tenha esquecido a senha, entre em contato com seu supervisor.</small>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 SGPPE</p>
+        <img src="img/logo_png_preto.png" alt="SGPPE" width="81" height="40">
+    </footer>
+  </div>
+  <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

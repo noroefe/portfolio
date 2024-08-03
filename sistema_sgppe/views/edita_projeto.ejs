@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>SGPPE - Sistema de Gerenciamento de Projetos para Pequenas Empresas</title>
+  <link rel="stylesheet" href="/public/headers.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+  <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/usuarios')
+        .then(response => response.json())
+        .then(usuarios => {
+            const selectUsuario = document.getElementById('usuarioId');
+            usuarios.forEach(usuario => {
+                let option = document.createElement('option');
+                option.value = usuario.Matricula_id; // ID do usuário como valor
+                option.textContent = `${usuario.Nome} ${usuario.Sobrenome}`; // Nome para exibição
+                selectUsuario.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Erro ao carregar usuários:', error));
+    });
+    
+    
+      </script>
+
+  <% function formatDate(date) { 
+  let d = new Date(date);
+  let day = ('0' + d.getDate()).slice(-2);
+  let month = ('0' + (d.getMonth() + 1)).slice(-2);
+  let year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+%>
+
+
+</head>
+<body> 
+  <div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+      <div class="col-md-3 mb-2 mb-md-0">
+          <img src="../public/img/logo_png_azul.png" alt="SGPPE" width="126" height="62">
+      </div>
+
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="/public/projetos_abertos.html" class="nav-link px-2">Projetos em Aberto</a></li>
+        <li><a href="/public/projetos_encerrados.html" class="nav-link px-2">Projetos Encerrados</a></li>
+        <li><a href="/public/configuracoes.html" class="nav-link px-2">Configurações</a></li>
+      </ul>
+
+      <div class="col-md-3 text-end">
+        <form action="/logout" method="get">
+        <button type="submit" class="btn btn-outline-primary me-2">Sair</button>
+      </form>
+      </div>
+    </header>
+  </div>
+  <div class="container">
+    <div class="col-md-8">
+      <h3>Editar Projeto</h3>
+      <p>Edite os dados abaixo e confirme para salvar suas alterações.</p>
+    </div>
+    
+    <div class="container">
+      <form id="edita_projeto" action="/edita_projeto" method="POST" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+        <div class="form-floating mb-3">
+          <input name="idProjeto" id="idProjeto" type="text" class="form-control"  placeholder="ID-Projeto"  value="<%= project.idProjeto %>" readonly>
+          <label for="floatingInput">ID-Projeto</label>
+        </div>
+
+        <div class="form-group">
+          <strong><label  for="nomeDoProjeto">Nome do Projeto</label></strong>
+            <p><em>Nome Atual: <%= project.NomeDoProjeto %></em></p>
+            <input type="text" class="form-control" name="nomeDoProjeto" id="nomeDoProjeto" required>
+        </div>
+        <br>
+        <div class="form-group">
+          <strong><label for="etapaAtual">Etapa Atual</label></strong>
+            <p><em>Etapa Atual: <%= project.EtapaAtual %></em></p>
+            <select type="text" class="form-select" name="etapaAtual" id="etapaAtual" required>
+            <option value="Início">Início</option>
+            <option value="Planejamento">Planejamento</option>
+            <option value="Execução">Execução</option>
+            <option value="Monitoramento">Monitoramento</option>
+            <option value="Encerramento">Encerramento</option>
+          </select>
+        </div>
+        <br>
+        <div class="form-group">
+          <strong><label for="usuarioId">Responsável</label></strong>
+          <p><em>Responsável Atual: <%= project.NomeResponsavel %></em></p>
+            <select class="form-control" name="usuarioId" id="usuarioId" required></select>
+        </div>
+        <br>
+        <div class="form-group">
+          <strong><label type="date" for="prazoProjeto">Prazo do Projeto</label></strong>
+          <p><em>Prazo Atual: <%= formatDate(project.PrazoProjeto) %></em></p>
+            <input type="date" name="prazoProjeto" class="form-control" id="prazoProjeto" required>
+        </div>
+        <br>
+        <div class="form-group">
+          <strong><label for="objetivosProjeto">Objetivos do Projeto</label></strong>
+            <p><em>Objetivos Atuais: <%= project.ObjetivosProjeto %></em></p>
+            <textarea class="form-control" name="objetivosProjeto"  id="objetivosProjeto" required></textarea>
+        </div>
+        <br>
+        <div class="form-group">
+            <strong><label for="tipoEncerramento">Tipo de Encerramento</label></strong>
+            <p><em>Tipo de Encerramento Atual: <%= project.TipoEncerramento %></em></p>
+            <select type="text" name="tipoEncerramento" class="form-select" id="tipoEncerramento" required>
+            <option value="Em Aberto">Em Aberto</option>
+            <option value="Cancelado">Cancelado</option>
+            <option value="Suspenso">Suspenso</option>
+            <option value="Concluído">Concluído</option>
+          </select>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+    </form>
+  </div>
+
+  </div>
+  <div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 SGPPE</p>
+
+    <p class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <img src="../public/img/logo_png_preto.png" alt="SGPPE" width="81" height="40">
+    </p>
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="/public/projetos_abertos.html" class="nav-link px-2 text-body-secondary">Projetos em Aberto</a></li>
+      <li class="nav-item"><a href="/public/projetos_encerrados.html" class="nav-link px-2 text-body-secondary">Projetos Encerrados</a></li>
+      <li class="nav-item"><a href="/public/configuracoes.html" class="nav-link px-2 text-body-secondary">Configurações</a></li>
+    </ul>
+  </footer>
+</div>
+
+  <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # SGPPE - Sistema de Gerenciamento de Projetos para Pequenas Empresas
 
-SGPPE - Sistema de Gerenciamento de Projetos para Pequenas Empresas, desenvolvido durante meu Trabalho de Conclusão de Curso, consistiu no desenvolvimento de um software destinado ao gerenciamento de projetos em pequenas empresas. Este software surgiu como resposta às dificuldades enfrentadas por pequenos negócios na gestão de projetos.
+SGPPE - Sistema de Gerenciamento de Projetos para Pequenas Empresas, desenvolvido durante meu Trabalho de Conclusão de Curso, consistiu no desenvolvimento de um software destinado ao gerenciamento de projetos em pequenas empresas. 
 
 ## Metodologia
 
@@ -51,4 +51,5 @@ Instalar todas as dependências contidas no arquivo `package.json`:
 
 ```bash
 npm install
+
 

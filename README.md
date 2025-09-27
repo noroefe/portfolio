@@ -46,6 +46,20 @@ Desenvolvido durante meu Trabalho de Conclusão de Curso, consistiu na modelagem
 | **Acessar README**                         | [LINK](https://github.com/noroefe/portfolio/blob/main/sistema_sgppe/README.md)|
 | **Licença**                                | Copyright (c) 2024 Fernando Schwartzhaupt Noroefé |
 
+###  🎮 Visualização de Dados  Jogos Populares 1980 - 2023 
+
+Dashboard experimental para análise com dados de jogos populares.
+
+| **Descrição**                | **Detalhes**                                                                                                                                                |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Nome**                     | Jogos Populares 1980 - 2023                                                                                                                                 |
+| **Ferramentas Utilizadas**   | ![Looker Studio](https://img.shields.io/badge/Google-Looker%20Studio-4285F4?logo=googlestudio\&logoColor=white)                                             |
+| **Ano de Criação**           | 2024                                                                                                                                                        |
+| **Objetivo**                 | Análise exploratória com dados de jogos populares entre os anos de 1980 e 2023                                                                              |
+| **Dados**                    | [Dataset Kaggle – Popular Video Games 1980-2023](https://www.kaggle.com/datasets/arnabchaki/popular-video-games-1980-2023/data) (Fonte original: Backloggd) |
+| **Dashboard com Resultados** | [Relatório Google Looker](https://lookerstudio.google.com/reporting/b0b636d6-60ff-4365-bfa9-98a503241771)                                                   |
+
+
 ###  🔍 Análise Exploratória Infrações de Trânsito em Viamão no 1º Trimestre 2024
 
 Análise básica das infrações de trânsito de Viamão no período, além de uma visualização no Tableau.

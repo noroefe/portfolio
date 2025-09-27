@@ -53,7 +53,7 @@ Dashboard experimental para análise com dados de jogos populares.
 | **Descrição**                | **Detalhes**                                                                                                                                                |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Nome**                     | Jogos Populares 1980 - 2023                                                                                                                                 |
-| **Ferramentas Utilizadas**   | ![Looker Studio](https://img.shields.io/badge/Google-Looker%20Studio-4285F4?logo=googlestudio\&logoColor=white)                                             |
+| **Ferramentas Utilizadas**   |![Excel](https://img.shields.io/badge/Excel-217346?logo=microsoft-excel&logoColor=white) ![Looker Studio](https://img.shields.io/badge/Google-Looker%20Studio-4285F4?logo=googlestudio\&logoColor=white)                                             |
 | **Ano de Criação**           | 2024                                                                                                                                                        |
 | **Objetivo**                 | Análise exploratória com dados de jogos populares entre os anos de 1980 e 2023                                                                              |
 | **Dados**                    | [Dataset Kaggle – Popular Video Games 1980-2023](https://www.kaggle.com/datasets/arnabchaki/popular-video-games-1980-2023/data) (Fonte original: Backloggd) |

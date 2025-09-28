@@ -7,7 +7,7 @@ Dashboard experimental criado no Google Data Studio e adaptado para Google Looke
 - **Nome do Dashboard**: Jogos Populares 1980 - 2023
 - **Ferramenta Utilizada**: Google Looker Studio
 - **Ano de Criação**: 2024
-- **Objetivo**: Análise exploratório com dados de jogos populares entre os anos de 1980 e 2023.
+- **Objetivo**: Análise exploratória com dados de jogos populares entre os anos de 1980 e 2023.
 - **Principais Funcionalidades**: Visualizações Interativas
 - **Dados**: Os dados foram obtidos no Kaggle (dataset "Popular Video Games 1980-2023), disponibilizado pelo usuário Arnab Chaki. A fonte origignal dos dados brutos é o site Backloggd.
 - **Link dos Dados Originais**: https://www.kaggle.com/datasets/arnabchaki/popular-video-games-1980-2023/data

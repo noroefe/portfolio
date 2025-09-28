@@ -73,4 +73,15 @@ Análise básica das infrações de trânsito de Viamão no período, além de u
 | **Análise**                                | [Acessar Análise](https://github.com/noroefe/portfolio/blob/56b5962f2468e8ed37aa16dc2b5db4804a0eaf2d/analise_infracoes_viamao_1t_2024/%20An%C3%A1lise%20Infra%C3%A7%C3%B5es%20de%20Tr%C3%A2nsito%20em%20Viam%C3%A3o%20no%201%C2%BA%20Trimestre%202024.ipynb)|
 | **Dashboard com Resultados**               | [Acessar Dashboard](https://public.tableau.com/app/profile/fernando.schwartzhaupt.noroef./viz/Dashboard-Viamo-1T-2024/Dashboard)|
 
+###  🕵️ Visualização - Crimes 2024 - Rio Grande do Sul
 
+Visualização para análise exploratória com dados sobre crimes cometidos no estado do Rio Grande do Sul em 2024.
+
+| **Descrição**                              | **Detalhes**                               |
+|--------------------------------------------|--------------------------------------------|
+| **Nome**                                   |  Crimes 2024 - Rio Grande do Sul|
+| **Ferramentas Utilizadas**                 | ![Excel](https://img.shields.io/badge/Excel-217346?logo=microsoft-excel&logoColor=white) ![Tableau](https://img.shields.io/badge/Tableau-E97627?logo=tableau&logoColor=white)        |
+| **Ano de Criação**                         | 2025                                       |
+| **Objetivo**                               | Visualização para análise exploratória com dados sobre crimes cometidos no estado do Rio Grande do Sul em 2024.|
+| **Dados**                                |  RIO GRANDE DO SUL. Dados Abertos (Lei nº 15.610/2021). Secretaria de Segurança Pública, [2025]. Disponível em: https://www.ssp.rs.gov.br/dados-abertos. |
+| **Dashboard com Resultados**               | [Acessar Visualização](https://public.tableau.com/app/profile/noroefe/viz/crimes_2024_rs/Crimes2024)|

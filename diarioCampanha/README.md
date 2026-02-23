@@ -32,9 +32,8 @@ O resultado é um Web App funcional, rápido e sem custos de hospedagem para o u
 
 ## 🖥️ Interface do Usuário
 
-*(Substitua os links abaixo pelos caminhos reais das suas imagens dentro da pasta do repositório, ex: `docs/img/home.png`)*
 
-### Tela Inicial (Dashboard)
+### Tela Inicial
 ![Tela Inicial - Dashboard](tela_inicial.png)
 > *Painel principal com brasão, conselho do dia, reflexões e atalhos rápidos de navegação.*
 
@@ -99,4 +98,5 @@ Diferente de aplicações locais, este sistema não requer a instalação do Nod
    * Você pode salvar este link nos favoritos do seu navegador ou adicioná-lo à tela inicial do seu smartphone para acessá-lo como um aplicativo nativo.
 
 ---
+
 

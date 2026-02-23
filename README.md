@@ -85,3 +85,16 @@ Visualização para análise exploratória com dados sobre crimes cometidos no e
 | **Objetivo**                               | Visualização para análise exploratória com dados sobre crimes cometidos no estado do Rio Grande do Sul em 2024.|
 | **Dados**                                |  RIO GRANDE DO SUL. Dados Abertos (Lei nº 15.610/2021). Secretaria de Segurança Pública, [2025]. Disponível em: https://www.ssp.rs.gov.br/dados-abertos. |
 | **Dashboard com Resultados**               | [Acessar Visualização](https://public.tableau.com/app/profile/noroefe/viz/crimes_2024_rs/Crimes2024)|
+
+### 🛡️ Diário de Campanha - Sistema de Missões Pessoais
+
+Desenvolvido para transformar a gestão de rotina em uma jornada épica, este sistema integra produtividade, finanças e metas pessoais através de uma interface gamificada e moderna, utilizando o ecossistema Google.
+
+| **Descrição** | **Detalhes** |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Nome do Projeto** | Diário de Campanha |
+| **Ferramentas Utilizadas** | [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Google Apps Script](https://img.shields.io/badge/Apps%20Script-4285F4?style=flat&logo=google-apps-script&logoColor=white)](https://developers.google.com/apps-script) [![Google Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?style=flat&logo=google-sheets&logoColor=white)](https://www.google.com/sheets/about/) [![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)](https://getbootstrap.com/) |
+| **Ano de Criação** | 2025 |
+| **Objetivo** | Gamificação da rotina pessoal e centralização de métricas de progresso (financeiro, intelectual e produtividade). |
+| **Principais Funcionalidades** | Gestão de Obrigações e Missões, Sincronização automática com Google Agenda e Dashboard de métricas com Chart.js. |
+| **Acessar README** | [LINK](https://github.com/noroefe/portfolio/blob/main/diarioCampanha/README.md) |

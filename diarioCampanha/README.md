@@ -2,7 +2,7 @@
 
 O **Diário de Campanha** é um software de gestão de rotina, metas e finanças pessoais projetado com uma estética levemente inspirada em campanhas medievais. Desenvolvido para funcionar inteiramente no ecossistema Google, ele transforma tarefas diárias em "Obrigações" e metas de longo prazo em "Missões", oferecendo uma experiência de uso engajadora, limpa e responsiva.
 
----
+
 
 ## ⚙️ Metodologia
 
@@ -12,7 +12,7 @@ O desenvolvimento deste projeto focou na criação de uma aplicação leve, de a
 * **Modelo (Banco de Dados):** O Google Sheets atua como o banco de dados da aplicação de forma *serverless*.
 * **Controlador (Backend):** Implementado em **Google Apps Script** (`Code.gs`), responsável por gerenciar o CRUD (Criar, Ler, Atualizar, Deletar), os cálculos de progresso da campanha e a integração nativa com a API do Google Calendar.
 
----
+
 
 ## 🏗️ Arquitetura e Integração com a Planilha
 
@@ -22,39 +22,39 @@ Diferente de sistemas tradicionais que usam bancos de dados relacionais estritos
 * **Comunicação:** O frontend se comunica com a planilha de forma assíncrona através da API nativa `google.script.run`. Os dados da planilha são encapsulados em objetos JSON e enviados à interface.
 * **Segurança e Escalabilidade:** Como a planilha fica restrita à conta Google do usuário, a segurança dos dados é garantida pela própria infraestrutura de autenticação do Google.
 
----
+
 
 ## 🏆 Resultados
 
 O resultado é um Web App funcional, rápido e sem custos de hospedagem para o usuário final. Ele oferece uma plataforma eficiente para acompanhamento de métricas de sucesso pessoal, gestão de compromissos automatizados com o Google Agenda e controle financeiro, tudo em um painel gamificado e intuitivo.
 
----
+
 
 ## 🖥️ Interface do Usuário
 
 *(Substitua os links abaixo pelos caminhos reais das suas imagens dentro da pasta do repositório, ex: `docs/img/home.png`)*
 
 ### Tela Inicial (Dashboard)
-![Tela Inicial - Dashboard](caminho-para-imagem-home.png)
+![Tela Inicial - Dashboard](tela_inicial.png)
 > *Painel principal com brasão, conselho do dia, reflexões e atalhos rápidos de navegação.*
 
 ### Tela de Obrigações
-![Tela de Obrigações](caminho-para-imagem-obrigacoes.png)
+![Tela de Obrigações](tela_obrigacoes.png)
 > *Tabela de tarefas com filtros por mês e status, destacando itens concluídos.*
 
 ### Tela do Tesouro
-![Tela do Tesouro](caminho-para-imagem-tesouro.png)
+![Tela do Tesouro](tela_tesouro.png)
 > *Gestão financeira e intelectual com gráfico de evolução temporal renderizado via Chart.js.*
 
 ### Tela de Progresso
-![Tela de Progresso](caminho-para-imagem-progresso.png)
+![Tela de Progresso](tela_progresso.png)
 > *Análise de desempenho da campanha com barras de progresso dinâmicas e mensagens de status automatizadas.*
 
 ### Formulários de Cadastro (Modais)
-![Modais de Cadastro](caminho-para-imagem-modais.png)
+![Modais de Cadastro](tela_tratados.png)
 > *Interface limpa e sobreposta para inserção de novos registros sem recarregar a página.*
 
----
+
 
 ## 🚀 Instalação e Uso
 
@@ -99,3 +99,4 @@ Diferente de aplicações locais, este sistema não requer a instalação do Nod
    * Você pode salvar este link nos favoritos do seu navegador ou adicioná-lo à tela inicial do seu smartphone para acessá-lo como um aplicativo nativo.
 
 ---
+

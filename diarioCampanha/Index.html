@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diário de Campanha</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-color: #f4f5f7;
+      --primary-color: #1a2530;
+      --accent-color: #d4af37;
+      --text-main: #333333;
+      --card-bg: #ffffff;
+    }
+    body { background-color: var(--bg-color); color: var(--text-main); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding-top: 70px; }
+    .navbar { background-color: var(--primary-color) !important; border-bottom: 3px solid var(--accent-color); }
+    .navbar-brand, .nav-link { color: #fff !important; font-weight: 500; }
+    .nav-link:hover { color: var(--accent-color) !important; }
+    .btn-medieval { background-color: var(--primary-color); color: #fff; border: 2px solid var(--accent-color); border-radius: 8px; padding: 20px; font-size: 1.2rem; transition: all 0.3s; width: 100%; text-align: left; }
+    .btn-medieval:hover { background-color: var(--accent-color); color: var(--primary-color); transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .section-container { display: none; animation: fadeIn 0.4s; }
+    .active-section { display: block; }
+    .card-custom { background-color: var(--card-bg); border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--primary-color); margin-bottom: 20px; }
+    .brasao { max-width: 150px; margin: 0 auto; display: block; filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.3)); }
+    .progress-bar { background-color: var(--accent-color); }
+
+    /* Tabelas */
+    .table-custom thead { background-color: var(--primary-color); color: white; }
+    .table-custom th { border-color: var(--accent-color); font-weight: 500; white-space: nowrap; }
+    .table-custom tbody tr { cursor: pointer; }
+    .table-custom tbody tr:hover { background-color: rgba(212,175,55,0.08); }
+
+    /* Ordenação */
+    .sortable { cursor: pointer; user-select: none; }
+    .sortable::after { content: ' ⇅'; opacity: 0.4; font-size: 0.75em; }
+    .sortable.asc::after  { content: ' ▲'; opacity: 1; }
+    .sortable.desc::after { content: ' ▼'; opacity: 1; }
+
+    /* Modais */
+    .modal-header { background-color: var(--primary-color); color: white; border-bottom: 2px solid var(--accent-color); }
+    .btn-close { filter: invert(1); }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .fab { position: fixed; bottom: 30px; right: 30px; background-color: var(--accent-color); color: var(--primary-color); border-radius: 50%; width: 60px; height: 60px; font-size: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; border: none; z-index: 1000; }
+    .fab:hover { background-color: #bfa130; }
+    .valor-negativo { color: #dc3545; font-weight: bold; }
+    .valor-positivo { color: #198754; font-weight: bold; }
+    .status-select { border: 1px solid #dee2e6; border-radius: 4px; padding: 2px 6px; font-size: 0.85rem; background: white; cursor: pointer; }
+    .op-toggle .btn-check:checked + .btn { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+    /* Cards de Progresso */
+    .prog-card { background: var(--card-bg); border-radius: 10px; padding: 18px 14px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--primary-color); margin-bottom: 16px; }
+    .prog-card.anual { border-top-color: #6c757d; }
+    .prog-card .pct { font-size: 2rem; font-weight: bold; color: var(--accent-color); }
+    .prog-card .label { color: #555; font-size: 0.85rem; margin-bottom: 2px; }
+    .prog-card .sub { color: #999; font-size: 0.78rem; }
+    .section-title-sm { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="#" onclick="navigate('home')">🛡️ Diário de Campanha</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon" style="filter:invert(1);"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigate('obrigacoes')">🏰 Obrigações</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigate('tesouro')">💰 Tesouro</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigate('missoes')">⚔️ Missões</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigate('tratados')">📜 Tratados</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigate('agenda')">📅 Agenda</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="navigate('progresso')">📊 Progresso</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container pb-5">
+
+  <!-- ══ HOME ══════════════════════════════════════════════════ -->
+  <div id="home" class="section-container active-section text-center">
+    <img src="https://heraldicart.org/knight/knight-armed-and-mounted-mono.png" alt="Brasão" class="brasao mt-4 mb-3">
+    <h1 class="mb-3" style="color:var(--primary-color);">Diário de Campanha</h1>
+    <p class="lead fst-italic text-muted">Registre suas façanhas e mantenha a disciplina</p>
+    <div class="row mt-5 text-start">
+      <div class="col-md-6 mb-3">
+        <div class="card-custom p-4 h-100">
+          <h5 style="color:var(--primary-color);">📜 Juramento do Velho Código</h5>
+          <p> Um cavaleiro jura bravura,
+Seu coração só tem virtudes,
+Sua espada defende o oprimido,
+Seu poder apoia os fracos,
+Sua palavra fala só a verdade,
+Sua fúria destrói a maldade</p>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="card-custom p-4 h-100">
+          <h5 style="color:var(--primary-color);">🕯️ Reflexões</h5>
+          <p>Quem se atreve a lutar, não teme o chão.<br>Pois a sorte só costuma acompanhar<br>Quem carrega o triunfo no coração.</p>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3"><button class="btn-medieval" onclick="navigate('obrigacoes')">🏰 Gerir Obrigações</button></div>
+      <div class="col-md-4 mb-3"><button class="btn-medieval" onclick="navigate('missoes')">⚔️ Ver Missões</button></div>
+      <div class="col-md-4 mb-3"><button class="btn-medieval" onclick="navigate('progresso')">📊 Analisar Progresso</button></div>
+    </div>
+  </div>
+
+  <!-- ══ OBRIGAÇÕES ════════════════════════════════════════════ -->
+  <div id="obrigacoes" class="section-container">
+    <h2 class="mb-4">🏰 Suas Obrigações</h2>
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <select id="filtro-mes" class="form-select" onchange="loadObrigacoes()">
+          <option value="">Todos os Meses</option>
+          <option value="janeiro">Janeiro</option><option value="fevereiro">Fevereiro</option>
+          <option value="março">Março</option><option value="abril">Abril</option>
+          <option value="maio">Maio</option><option value="junho">Junho</option>
+          <option value="julho">Julho</option><option value="agosto">Agosto</option>
+          <option value="setembro">Setembro</option><option value="outubro">Outubro</option>
+          <option value="novembro">Novembro</option><option value="dezembro">Dezembro</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="filtro-status" class="form-select" onchange="loadObrigacoes()">
+          <option value="">Todos os Status</option>
+          <option value="true">Concluídas</option>
+          <option value="false">Pendentes</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-responsive bg-white rounded shadow-sm">
+      <table class="table table-hover table-custom mb-0" id="tbl-obrigacoes">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th class="sortable" onclick="sortTable('obrigacoes','Título')">Título</th>
+            <th class="sortable" onclick="sortTable('obrigacoes','Categoria')">Categoria</th>
+            <th class="sortable" onclick="sortTable('obrigacoes','Data Prevista')">Data Prevista</th>
+            <th class="sortable" onclick="sortTable('obrigacoes','Prioridade')">Prioridade</th>
+          </tr>
+        </thead>
+        <tbody id="tb-obrigacoes"><tr><td colspan="5" class="text-center">Carregando pergaminhos...</td></tr></tbody>
+      </table>
+    </div>
+    <button class="fab" onclick="abrirModal('modalObrigacao')">+</button>
+  </div>
+
+  <!-- ══ TESOURO ═══════════════════════════════════════════════ -->
+  <div id="tesouro" class="section-container">
+    <h2 class="mb-4">💰 O Tesouro</h2>
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <div class="card-custom p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">Evolução do Tesouro</span>
+            <div class="btn-group btn-group-sm">
+              <button id="btn-mensal" class="btn btn-outline-secondary active" onclick="alternarGrafico('mensal')">Mensal</button>
+              <button id="btn-acumulado" class="btn btn-outline-secondary" onclick="alternarGrafico('acumulado')">Acumulado</button>
+            </div>
+          </div>
+          <canvas id="graficoTesouro"></canvas>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-custom p-4 text-center h-100 d-flex flex-column justify-content-center">
+          <h5 class="text-muted">Saldo Financeiro</h5>
+          <h2 id="total-financeiro" style="color:var(--accent-color);">R$ 0,00</h2>
+          <hr>
+          <h5 class="text-muted">Ativos Intelectuais</h5>
+          <h3 id="total-intelectual">0</h3>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <select id="filtro-tesouro-tipo" class="form-select" onchange="renderTesouro()">
+          <option value="">Todos os Tipos</option>
+          <option>Financeiro</option><option>Retirada</option>
+          <option>Material</option><option>Intelectual</option><option>Espiritual</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="filtro-tesouro-mes" class="form-select" onchange="renderTesouro()">
+          <option value="">Todos os Meses</option>
+          <option value="0">Janeiro</option><option value="1">Fevereiro</option>
+          <option value="2">Março</option><option value="3">Abril</option>
+          <option value="4">Maio</option><option value="5">Junho</option>
+          <option value="6">Julho</option><option value="7">Agosto</option>
+          <option value="8">Setembro</option><option value="9">Outubro</option>
+          <option value="10">Novembro</option><option value="11">Dezembro</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-responsive bg-white rounded shadow-sm">
+      <table class="table table-hover table-custom mb-0" id="tbl-tesouro">
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortTable('tesouro','Data')">Data</th>
+            <th class="sortable" onclick="sortTable('tesouro','Tipo')">Tipo</th>
+            <th class="sortable" onclick="sortTable('tesouro','Descrição')">Descrição</th>
+            <th class="sortable" onclick="sortTable('tesouro','Valor Financeiro')">Valor (R$)</th>
+            <th class="sortable" onclick="sortTable('tesouro','Categoria')">Categoria</th>
+          </tr>
+        </thead>
+        <tbody id="tb-tesouro"><tr><td colspan="5" class="text-center">Contando as moedas...</td></tr></tbody>
+      </table>
+    </div>
+    <button class="fab" onclick="abrirModal('modalTesouro')">+</button>
+  </div>
+
+  <!-- ══ MISSÕES ═══════════════════════════════════════════════ -->
+  <div id="missoes" class="section-container">
+    <h2 class="mb-4">⚔️ Painel de Missões</h2>
+    <p class="text-muted small mb-2">Clique em uma missão para ver detalhes. Altere o status pelo seletor na linha.</p>
+    <div class="table-responsive bg-white rounded shadow-sm">
+      <table class="table table-hover table-custom mb-0" id="tbl-missoes">
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortTable('missoes','Título')">Título</th>
+            <th class="sortable" onclick="sortTable('missoes','Tipo')">Tipo</th>
+            <th class="sortable" onclick="sortTable('missoes','Data Início')">Início</th>
+            <th class="sortable" onclick="sortTable('missoes','Data Fim')">Fim</th>
+            <th class="sortable" onclick="sortTable('missoes','Status')">Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tb-missoes"><tr><td colspan="6" class="text-center">Verificando o conselho de guerra...</td></tr></tbody>
+      </table>
+    </div>
+    <button class="fab" onclick="abrirModal('modalMissao')">+</button>
+  </div>
+
+  <!-- ══ TRATADOS ═══════════════════════════════════════════════ -->
+  <div id="tratados" class="section-container">
+    <h2 class="mb-4">📜 Tratados e Juramentos</h2>
+    <p class="text-muted small mb-2">Clique em um tratado para ler a descrição completa. Altere o status pelo seletor na linha.</p>
+    <div class="table-responsive bg-white rounded shadow-sm">
+      <table class="table table-hover table-custom mb-0" id="tbl-tratados">
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortTable('tratados','Título do Tratado')">Tratado</th>
+            <th>Descrição</th>
+            <th class="sortable" onclick="sortTable('tratados','Data')">Data Início</th>
+            <th class="sortable" onclick="sortTable('tratados','Prazo')">Prazo</th>
+            <th class="sortable" onclick="sortTable('tratados','Status')">Status</th>
+          </tr>
+        </thead>
+        <tbody id="tb-tratados"><tr><td colspan="5" class="text-center">Lendo os pergaminhos antigos...</td></tr></tbody>
+      </table>
+    </div>
+    <button class="fab" onclick="abrirModal('modalTratado')">+</button>
+  </div>
+
+  <!-- ══ AGENDA ════════════════════════════════════════════════ -->
+  <div id="agenda" class="section-container">
+    <h2 class="mb-4">📅 Eventos e Compromissos</h2>
+    <p class="text-muted small mb-2">Clique em um evento para ver a descrição.</p>
+    <div class="table-responsive bg-white rounded shadow-sm">
+      <table class="table table-hover table-custom mb-0" id="tbl-agenda">
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortTable('agenda','Data')">Data</th>
+            <th class="sortable" onclick="sortTable('agenda','Hora Início')">Horário</th>
+            <th class="sortable" onclick="sortTable('agenda','Título')">Título</th>
+            <th class="sortable" onclick="sortTable('agenda','Local')">Local</th>
+            <th>Calendar</th>
+          </tr>
+        </thead>
+        <tbody id="tb-agenda"><tr><td colspan="5" class="text-center">Consultando as estrelas...</td></tr></tbody>
+      </table>
+    </div>
+    <button class="fab" onclick="abrirModal('modalAgenda')">+</button>
+  </div>
+
+  <!-- ══ PROGRESSO ══════════════════════════════════════════════ -->
+  <div id="progresso" class="section-container">
+    <h2 class="mb-4">📊 Progresso da Campanha</h2>
+
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <label class="form-label small text-muted">Mês de referência</label>
+        <select id="prog-filtro-mes" class="form-select" onchange="loadProgresso()">
+          <option value="janeiro">Janeiro</option><option value="fevereiro">Fevereiro</option>
+          <option value="março">Março</option><option value="abril">Abril</option>
+          <option value="maio">Maio</option><option value="junho">Junho</option>
+          <option value="julho">Julho</option><option value="agosto">Agosto</option>
+          <option value="setembro">Setembro</option><option value="outubro">Outubro</option>
+          <option value="novembro">Novembro</option><option value="dezembro">Dezembro</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label small text-muted">Ano</label>
+        <select id="prog-filtro-ano" class="form-select" onchange="loadProgresso()"></select>
+      </div>
+    </div>
+
+    <div class="alert alert-secondary text-center" id="mensagem-progresso">
+      <strong>Analisando os registros da campanha...</strong>
+    </div>
+
+    <!-- Indicadores MENSAIS -->
+    <div class="section-title-sm">📅 Indicadores do Mês Selecionado</div>
+    <div class="row">
+      <div class="col-md-3 col-6">
+        <div class="prog-card">
+          <div class="label">🏰 Obrigações</div>
+          <div class="pct" id="prog-pct-obr">—</div>
+          <div class="sub" id="prog-sub-obr">0 / 0</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="prog-card">
+          <div class="label">⚔️ Missões (mensais)</div>
+          <div class="pct" id="prog-pct-miss-m">—</div>
+          <div class="sub" id="prog-sub-miss-m">0 / 0</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="prog-card">
+          <div class="label">📜 Tratados (mensais)</div>
+          <div class="pct" id="prog-pct-trat-m">—</div>
+          <div class="sub" id="prog-sub-trat-m">0 / 0</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="prog-card" style="border-top-color:var(--accent-color);">
+          <div class="label">📊 Índice Geral do Mês</div>
+          <div class="pct" id="prog-pct-geral">—</div>
+          <div class="sub">média ponderada</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicadores ANUAIS -->
+    <div class="section-title-sm mt-3">📆 Missões e Tratados de Longa Duração (no Ano)</div>
+    <div class="row">
+      <div class="col-md-4 col-6">
+        <div class="prog-card anual">
+          <div class="label">⚔️ Missões multi-mês</div>
+          <div class="pct" id="prog-pct-miss-a">—</div>
+          <div class="sub" id="prog-sub-miss-a">0 / 0</div>
+        </div>
+      </div>
+      <div class="col-md-4 col-6">
+        <div class="prog-card anual">
+          <div class="label">📜 Tratados multi-mês</div>
+          <div class="pct" id="prog-pct-trat-a">—</div>
+          <div class="sub" id="prog-sub-trat-a">0 / 0</div>
+        </div>
+      </div>
+      <div class="col-md-4 col-6">
+        <div class="prog-card anual">
+          <div class="label">🏰 Obrigações concluídas (ano)</div>
+          <div class="pct" id="prog-obr-ano" style="font-size:2rem;">0</div>
+          <div class="sub">total acumulado</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tesouro -->
+    <div class="row mt-2">
+      <div class="col-md-6 mb-3">
+        <div class="card-custom p-3 text-center">
+          <h5 class="text-muted">💰 Saldo Financeiro (Total)</h5>
+          <h3 id="prog-tesouro" style="color:var(--accent-color);">R$ 0,00</h3>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="card-custom p-3 text-center">
+          <h5 class="text-muted">🧠 Ativos Intelectuais</h5>
+          <h3 id="prog-intelectual">0</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ══ MODAIS DE FORMULÁRIO ═══════════════════════════════════ -->
+
+<!-- Obrigação -->
+<div class="modal fade" id="modalObrigacao" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Adicionar Obrigação</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      <form id="formObrigacao" onsubmit="submitForm(event,'🏰 OBRIGAÇÕES','formObrigacao')">
+        <input type="text" class="form-control mb-2" id="ob-titulo" placeholder="Título" required>
+        <textarea class="form-control mb-2" id="ob-desc" placeholder="Descrição"></textarea>
+        <select class="form-select mb-2" id="ob-cat" required>
+          <option value="">Categoria...</option><option>Produção</option><option>Estudos</option><option>Saúde</option><option>Espiritual</option><option>Financeiro</option><option>Outro</option>
+        </select>
+        <select class="form-select mb-2" id="ob-mes" required>
+          <option value="">Mês de Referência...</option>
+          <option value="janeiro">Janeiro</option><option value="fevereiro">Fevereiro</option>
+          <option value="março">Março</option><option value="abril">Abril</option>
+          <option value="maio">Maio</option><option value="junho">Junho</option>
+          <option value="julho">Julho</option><option value="agosto">Agosto</option>
+          <option value="setembro">Setembro</option><option value="outubro">Outubro</option>
+          <option value="novembro">Novembro</option><option value="dezembro">Dezembro</option>
+        </select>
+        <input type="date" class="form-control mb-2" id="ob-data" required>
+        <select class="form-select mb-3" id="ob-prio" required><option value="">Prioridade...</option><option>Baixa</option><option>Média</option><option>Alta</option></select>
+        <button type="submit" class="btn btn-primary w-100" style="background-color:var(--primary-color);">Forjar Obrigação</button>
+      </form>
+    </div>
+  </div></div>
+</div>
+
+<!-- Tesouro -->
+<div class="modal fade" id="modalTesouro" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Guardar no Tesouro</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      <form id="formTesouro" onsubmit="submitTesouro(event)">
+        <div class="mb-3 op-toggle">
+          <label class="form-label small text-muted">Operação</label>
+          <div class="btn-group w-100">
+            <input type="radio" class="btn-check" name="ts-op" id="ts-op-entrada" value="entrada" checked onchange="toggleTipoTesouro()">
+            <label class="btn btn-outline-secondary" for="ts-op-entrada">📥 Entrada</label>
+            <input type="radio" class="btn-check" name="ts-op" id="ts-op-saida" value="saida" onchange="toggleTipoTesouro()">
+            <label class="btn btn-outline-secondary" for="ts-op-saida">📤 Saída / Retirada</label>
+          </div>
+        </div>
+        <div id="ts-tipo-wrapper">
+          <select class="form-select mb-2" id="ts-tipo">
+            <option value="">Tipo...</option><option>Financeiro</option><option>Material</option><option>Intelectual</option><option>Espiritual</option>
+          </select>
+        </div>
+        <input type="text" class="form-control mb-2" id="ts-desc" placeholder="Descrição" required>
+        <input type="number" step="0.01" min="0" class="form-control mb-2" id="ts-valor" placeholder="Valor (R$)">
+        <input type="date" class="form-control mb-2" id="ts-data" required>
+        <input type="text" class="form-control mb-2" id="ts-cat" placeholder="Categoria">
+        <textarea class="form-control mb-3" id="ts-obs" placeholder="Observações (justificativa para retiradas)"></textarea>
+        <button type="submit" class="btn btn-primary w-100" style="background-color:var(--primary-color);">Guardar</button>
+      </form>
+    </div>
+  </div></div>
+</div>
+
+<!-- Missão -->
+<div class="modal fade" id="modalMissao" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Iniciar Missão</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      <form id="formMissao" onsubmit="submitForm(event,'⚔️ MISSÕES','formMissao')">
+        <input type="text" class="form-control mb-2" id="ms-titulo" placeholder="Título da Missão" required>
+        <textarea class="form-control mb-2" id="ms-desc" placeholder="Descrição"></textarea>
+        <select class="form-select mb-2" id="ms-tipo" required><option value="">Tipo...</option><option>Pessoal</option><option>Profissional</option><option>Criativa</option><option>Física</option><option>Social</option></select>
+        <select class="form-select mb-2" id="ms-status" required><option>Em andamento</option><option>Concluída</option><option>Cancelada</option></select>
+        <div class="row">
+          <div class="col"><label class="small text-muted">Início</label><input type="date" class="form-control mb-2" id="ms-ini" required></div>
+          <div class="col"><label class="small text-muted">Fim</label><input type="date" class="form-control mb-2" id="ms-fim"></div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mt-2" style="background-color:var(--primary-color);">Declarar Missão</button>
+      </form>
+    </div>
+  </div></div>
+</div>
+
+<!-- Tratado -->
+<div class="modal fade" id="modalTratado" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Firmar Tratado</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      <form id="formTratado" onsubmit="submitForm(event,'📜 TRATADOS','formTratado')">
+        <input type="text" class="form-control mb-2" id="tr-titulo" placeholder="Título do Tratado" required>
+        <textarea class="form-control mb-2" id="tr-desc" placeholder="Juramento / Descrição" required></textarea>
+        <input type="date" class="form-control mb-2" id="tr-data" required>
+        <label class="small text-muted">Prazo Final (Opcional)</label>
+        <input type="date" class="form-control mb-2" id="tr-prazo">
+        <select class="form-select mb-3" id="tr-status" required><option>Vigente</option><option>Cumprido</option><option>Quebrado</option></select>
+        <button type="submit" class="btn btn-primary w-100" style="background-color:var(--primary-color);">Selar Tratado</button>
+      </form>
+    </div>
+  </div></div>
+</div>
+
+<!-- Agenda -->
+<div class="modal fade" id="modalAgenda" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Novo Compromisso</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      <form id="formAgenda" onsubmit="submitAgenda(event)">
+        <input type="text" class="form-control mb-2" id="ag-titulo" placeholder="Título" required>
+        <textarea class="form-control mb-2" id="ag-desc" placeholder="Descrição"></textarea>
+        <input type="date" class="form-control mb-2" id="ag-data" required>
+        <div class="row">
+          <div class="col"><label class="small text-muted">Início</label><input type="time" class="form-control mb-2" id="ag-ini" required></div>
+          <div class="col"><label class="small text-muted">Fim</label><input type="time" class="form-control mb-2" id="ag-fim" required></div>
+        </div>
+        <input type="text" class="form-control mb-3" id="ag-local" placeholder="Local">
+        <p class="small text-muted">💡 Este evento será salvo na planilha e adicionado automaticamente ao seu Google Agenda.</p>
+        <button type="submit" class="btn btn-primary w-100" style="background-color:var(--primary-color);">Agendar</button>
+      </form>
+    </div>
+  </div></div>
+</div>
+
+<!-- Modal genérico de detalhes -->
+<div class="modal fade" id="modalDetalhe" tabindex="-1">
+  <div class="modal-dialog modal-lg"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="detalhe-titulo">Detalhes</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body" id="detalhe-corpo"></div>
+  </div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ══════════════════════════════════════════════════════════════
+let chartInstancia = null;
+let modoGrafico = 'mensal';
+let dadosGraficoAtual = {};
+
+let dadosCache = { obrigacoes: [], tesouro: [], missoes: [], tratados: [], agenda: [] };
+
+// sortConfig: { nomeCache: { col: string, dir: 'asc'|'desc' } }
+let sortConfig = {};
+
+// ══════════════════════════════════════════════════════════════
+// INICIALIZAÇÃO
+// ══════════════════════════════════════════════════════════════
+window.onload = () => {
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho',
+                 'julho','agosto','setembro','outubro','novembro','dezembro'];
+  const hoje = new Date();
+  document.getElementById('filtro-mes').value = meses[hoje.getMonth()];
+
+  // Montar seletor de anos no Progresso
+  const selAno = document.getElementById('prog-filtro-ano');
+  const anoAtual = hoje.getFullYear();
+  for (let y = anoAtual; y >= anoAtual - 4; y--) {
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y;
+    selAno.appendChild(opt);
+  }
+  document.getElementById('prog-filtro-mes').value = meses[hoje.getMonth()];
+
+  google.script.run.setupSystem();
+};
+
+// ══════════════════════════════════════════════════════════════
+// NAVEGAÇÃO
+// ══════════════════════════════════════════════════════════════
+function navigate(id) {
+  document.querySelectorAll('.section-container').forEach(el => el.classList.remove('active-section'));
+  document.getElementById(id).classList.add('active-section');
+  const nc = document.getElementById('navbarNav');
+  if (nc.classList.contains('show')) new bootstrap.Collapse(nc).hide();
+  if (id === 'obrigacoes') loadObrigacoes(true);
+  if (id === 'tesouro')    loadTesouro();
+  if (id === 'missoes')    loadMissoes();
+  if (id === 'tratados')   loadTratados();
+  if (id === 'agenda')     loadAgenda();
+  if (id === 'progresso')  loadProgresso();
+}
+
+function abrirModal(mid) { new bootstrap.Modal(document.getElementById(mid)).show(); }
+function fecharModal(mid) {
+  const inst = bootstrap.Modal.getInstance(document.getElementById(mid));
+  if (inst) inst.hide();
+}
+function mostrarDetalhe(titulo, corpo) {
+  document.getElementById('detalhe-titulo').textContent = titulo;
+  document.getElementById('detalhe-corpo').innerHTML = corpo;
+  new bootstrap.Modal(document.getElementById('modalDetalhe')).show();
+}
+
+// ══════════════════════════════════════════════════════════════
+// UTILITÁRIOS
+// ══════════════════════════════════════════════════════════════
+function fmtData(iso) {
+  if (!iso) return '-';
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+}
+function fmtValor(v) {
+  return 'R$ ' + (parseFloat(v) || 0).toFixed(2).replace('.', ',');
+}
+function esc(s) { // escapa HTML básico para atributos/títulos
+  return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ══════════════════════════════════════════════════════════════
+// ORDENAÇÃO GENÉRICA
+// ══════════════════════════════════════════════════════════════
+// tblId    → id da <table> (tbl-obrigacoes, tbl-tesouro, …)
+// cacheKey → chave em dadosCache (obrigacoes, tesouro, …)
+// col      → nome do campo no objeto de dados
+// renderFn → função de renderização a chamar após ordenar
+function sortTable(cacheKey, col) {
+  const cfg = sortConfig[cacheKey] || {};
+  const newDir = (cfg.col === col && cfg.dir === 'asc') ? 'desc' : 'asc';
+  sortConfig[cacheKey] = { col, dir: newDir };
+
+  // Atualizar visual dos <th>
+  const tblId = 'tbl-' + cacheKey;
+  document.querySelectorAll(`#${tblId} thead th`).forEach(th => {
+    th.classList.remove('asc', 'desc');
+    if (th.textContent.trim().replace(/[▲▼⇅\s]/g,'') ===
+        col.trim().replace(/[▲▼⇅\s]/g,'')) {
+      th.classList.add(newDir);
+    }
+  });
+
+  // Re-renderizar
+  const renders = {
+    obrigacoes: renderObrigacoes,
+    tesouro:    renderTesouro,
+    missoes:    renderMissoes,
+    tratados:   renderTratados,
+    agenda:     renderAgenda
+  };
+  if (renders[cacheKey]) renders[cacheKey]();
+}
+
+function applySort(arr, cacheKey) {
+  const cfg = sortConfig[cacheKey];
+  if (!cfg || !cfg.col) return arr;
+  const { col, dir } = cfg;
+  return [...arr].sort((a, b) => {
+    let va = a[col] ?? '', vb = b[col] ?? '';
+    // Tentar comparação numérica
+    const na = parseFloat(va), nb = parseFloat(vb);
+    if (!isNaN(na) && !isNaN(nb)) { va = na; vb = nb; }
+    // Tentar comparação de datas ISO
+    else if (String(va).match(/^\d{4}-\d{2}-\d{2}/)) {
+      va = new Date(va); vb = new Date(vb);
+    } else {
+      va = String(va).toLowerCase(); vb = String(vb).toLowerCase();
+    }
+    if (va < vb) return dir === 'asc' ? -1 :  1;
+    if (va > vb) return dir === 'asc' ?  1 : -1;
+    return 0;
+  });
+}
+
+// Atualiza ícone no <th> correto comparando texto visível
+function syncSortHeader(tblId, col, dir) {
+  document.querySelectorAll(`#${tblId} thead th.sortable`).forEach(th => {
+    // Pegar o texto do th antes de qualquer ::after (não temos acesso ao ::after via JS,
+    // mas o onclick tem o col como argumento — usamos data-col)
+    const onclickStr = th.getAttribute('onclick') || '';
+    const match = onclickStr.match(/'([^']+)'\)/);
+    if (match && match[1] === col) {
+      th.classList.remove('asc','desc');
+      th.classList.add(dir);
+    } else {
+      th.classList.remove('asc','desc');
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// 🏰 OBRIGAÇÕES
+// ══════════════════════════════════════════════════════════════
+function loadObrigacoes(fetchData = false) {
+  if (fetchData) {
+    document.getElementById('tb-obrigacoes').innerHTML = '<tr><td colspan="5" class="text-center">Buscando pergaminhos...</td></tr>';
+    google.script.run.withSuccessHandler(data => {
+      dadosCache.obrigacoes = data || [];
+      renderObrigacoes();
+    }).getSheetData('🏰 OBRIGAÇÕES');
+  } else {
+    renderObrigacoes();
+  }
+}
+
+function renderObrigacoes() {
+  const tb = document.getElementById('tb-obrigacoes');
+  const mesFiltro    = document.getElementById('filtro-mes').value.toLowerCase();
+  const statusFiltro = document.getElementById('filtro-status').value;
+
+  let filtered = dadosCache.obrigacoes.filter(o => {
+    const matchMes    = mesFiltro === '' || (o['Mês'] && o['Mês'].toLowerCase() === mesFiltro);
+    const matchStatus = statusFiltro === '' || String(o['Concluída']) === statusFiltro;
+    return matchMes && matchStatus;
+  });
+
+  filtered = applySort(filtered, 'obrigacoes');
+  tb.innerHTML = '';
+
+  if (!filtered.length) {
+    tb.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhuma obrigação encontrada.</td></tr>';
+    return;
+  }
+  filtered.forEach(o => {
+    const checked     = o['Concluída'] === true;
+    const badgeColor  = o['Prioridade'] === 'Alta' ? 'bg-danger' : (o['Prioridade'] === 'Média' ? 'bg-warning text-dark' : 'bg-info text-dark');
+    const dataFmt     = fmtData(o['Data Prevista']);
+    const conclusao   = o['Data Conclusão'] || (checked ? '(sem registro)' : 'Pendente');
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="form-check-input fs-4" type="checkbox" ${checked ? 'checked' : ''}
+          onchange="toggleObrigacao('${esc(o['ID'])}',this.checked)" onclick="event.stopPropagation()"></td>
+      <td class="${checked ? 'text-decoration-line-through text-muted' : 'fw-bold'}">${o['Título']}</td>
+      <td>${o['Categoria'] || '-'}</td>
+      <td>${dataFmt}</td>
+      <td><span class="badge ${badgeColor}">${o['Prioridade'] || '-'}</span></td>`;
+    tr.addEventListener('click', e => {
+      if (e.target.type === 'checkbox') return;
+      mostrarDetalhe(`🏰 ${o['Título']}`, `
+        <table class="table table-borderless mb-0">
+          <tr><th width="140">Categoria</th><td>${o['Categoria']||'-'}</td></tr>
+          <tr><th>Mês</th><td>${o['Mês']||'-'}</td></tr>
+          <tr><th>Data Prevista</th><td>${dataFmt}</td></tr>
+          <tr><th>Prioridade</th><td>${o['Prioridade']||'-'}</td></tr>
+          <tr><th>Situação</th><td>${checked ? '✅ Concluída' : '⏳ Pendente'}</td></tr>
+          <tr><th>Data Conclusão</th><td>${conclusao}</td></tr>
+          <tr><th>Descrição</th><td>${o['Descrição']||'<em class="text-muted">Sem descrição</em>'}</td></tr>
+        </table>`);
+    });
+    tb.appendChild(tr);
+  });
+}
+
+function toggleObrigacao(id, isCompleted) {
+  google.script.run.withSuccessHandler(res => {
+    if (!res.success) alert('Erro: ' + res.message);
+    else loadObrigacoes(true);
+  }).toggleObrigacao(id, isCompleted);
+}
+
+// ══════════════════════════════════════════════════════════════
+// 💰 TESOURO
+// ══════════════════════════════════════════════════════════════
+function loadTesouro() {
+  document.getElementById('tb-tesouro').innerHTML = '<tr><td colspan="5" class="text-center">Contando as moedas...</td></tr>';
+  google.script.run.withSuccessHandler(data => {
+    dadosCache.tesouro = data || [];
+    renderTesouro();
+  }).getSheetData('💰 TESOURO');
+  loadProgresso();
+}
+
+function renderTesouro() {
+  const tb        = document.getElementById('tb-tesouro');
+  const tipoFilt  = document.getElementById('filtro-tesouro-tipo').value;
+  const mesFilt   = document.getElementById('filtro-tesouro-mes').value;
+
+  let filtered = dadosCache.tesouro.filter(t => {
+    const matchTipo = tipoFilt === '' || t['Tipo'] === tipoFilt;
+    let matchMes = true;
+    if (mesFilt !== '') {
+      const d = t['Data'] ? new Date(t['Data']) : null;
+      matchMes = d && !isNaN(d) && d.getUTCMonth() === parseInt(mesFilt);
+    }
+    return matchTipo && matchMes;
+  });
+
+  filtered = applySort(filtered, 'tesouro');
+  tb.innerHTML = '';
+
+  if (!filtered.length) {
+    tb.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum registro encontrado.</td></tr>';
+    return;
+  }
+  filtered.forEach(t => {
+    const val = parseFloat(t['Valor Financeiro']) || 0;
+    const isRet = t['Tipo'] === 'Retirada' || val < 0;
+    const valorHtml = val !== 0
+      ? `<span class="${isRet ? 'valor-negativo' : 'valor-positivo'}">${fmtValor(val)}</span>`
+      : '-';
+    tb.innerHTML += `<tr>
+      <td>${fmtData(t['Data'])}</td>
+      <td>${isRet ? '<span class="badge bg-danger">Retirada</span>' : `<span class="badge bg-secondary">${t['Tipo']}</span>`}</td>
+      <td>${t['Descrição']||'-'}</td>
+      <td>${valorHtml}</td>
+      <td>${t['Categoria']||'-'}</td></tr>`;
+  });
+}
+
+function toggleTipoTesouro() {
+  const isSaida = document.querySelector('input[name="ts-op"]:checked').value === 'saida';
+  document.getElementById('ts-tipo-wrapper').style.display = isSaida ? 'none' : 'block';
+}
+
+function submitTesouro(event) {
+  event.preventDefault();
+  const isSaida = document.querySelector('input[name="ts-op"]:checked').value === 'saida';
+  const tipo = isSaida ? 'Retirada' : document.getElementById('ts-tipo').value;
+  let valor = parseFloat(document.getElementById('ts-valor').value) || 0;
+  if (isSaida && valor > 0) valor = -valor;
+
+  google.script.run.withSuccessHandler(res => {
+    if (res.success) {
+      document.getElementById('formTesouro').reset();
+      toggleTipoTesouro();
+      fecharModal('modalTesouro');
+      loadTesouro();
+    } else alert('Erro: ' + res.message);
+  }).addRecord('💰 TESOURO', [
+    tipo,
+    document.getElementById('ts-desc').value,
+    valor || '',
+    document.getElementById('ts-data').value,
+    document.getElementById('ts-cat').value,
+    document.getElementById('ts-obs').value
+  ]);
+}
+
+function alternarGrafico(modo) {
+  modoGrafico = modo;
+  document.getElementById('btn-mensal').classList.toggle('active', modo === 'mensal');
+  document.getElementById('btn-acumulado').classList.toggle('active', modo === 'acumulado');
+  renderGraficoTesouro(dadosGraficoAtual);
+}
+
+function renderGraficoTesouro(dadosGrafico) {
+  dadosGraficoAtual = dadosGrafico;
+  const ctx = document.getElementById('graficoTesouro').getContext('2d');
+  if (chartInstancia) chartInstancia.destroy();
+  const labels = Object.keys(dadosGrafico).sort();
+  let valores = labels.map(l => dadosGrafico[l]);
+  if (modoGrafico === 'acumulado') {
+    let soma = 0;
+    valores = valores.map(v => { soma += v; return soma; });
+  }
+  chartInstancia = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels.length ? labels : ['Sem dados'],
+      datasets: [{ label: modoGrafico === 'acumulado' ? 'Tesouro Acumulado (R$)' : 'Movimentação Mensal (R$)',
+        data: valores.length ? valores : [0],
+        borderColor: '#d4af37', backgroundColor: 'rgba(212,175,55,0.2)',
+        borderWidth: 3, fill: true, tension: 0.3 }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// ⚔️ MISSÕES
+// ══════════════════════════════════════════════════════════════
+function loadMissoes() {
+  document.getElementById('tb-missoes').innerHTML = '<tr><td colspan="6" class="text-center">Verificando o conselho de guerra...</td></tr>';
+  google.script.run.withSuccessHandler(data => {
+    dadosCache.missoes = data || [];
+    renderMissoes();
+  }).getSheetData('⚔️ MISSÕES');
+}
+
+function renderMissoes() {
+  const tb = document.getElementById('tb-missoes');
+  const sorted = applySort(dadosCache.missoes, 'missoes');
+  tb.innerHTML = '';
+  if (!sorted.length) {
+    tb.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Nenhuma missão em curso.</td></tr>';
+    return;
+  }
+  sorted.forEach(m => {
+    const colorClass = m['Status'] === 'Concluída' ? 'text-success' : (m['Status'] === 'Cancelada' ? 'text-danger' : 'text-primary');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="fw-bold">${m['Título']}</td>
+      <td>${m['Tipo']||'-'}</td>
+      <td>${fmtData(m['Data Início'])}</td>
+      <td>${fmtData(m['Data Fim'])}</td>
+      <td>
+        <select class="status-select ${colorClass}"
+          onchange="atualizarStatusMissao('${esc(m['ID'])}',this.value,this)"
+          onclick="event.stopPropagation()">
+          <option ${m['Status']==='Em andamento'?'selected':''}>Em andamento</option>
+          <option ${m['Status']==='Concluída'?'selected':''}>Concluída</option>
+          <option ${m['Status']==='Cancelada'?'selected':''}>Cancelada</option>
+        </select>
+      </td>
+      <td><button class="btn btn-sm btn-outline-secondary"
+            onclick="event.stopPropagation();verDetalhesMissao('${esc(m['ID'])}')">📋</button></td>`;
+    tr.addEventListener('click', e => {
+      if (e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION' || e.target.tagName === 'BUTTON') return;
+      verDetalhesMissao(m['ID']);
+    });
+    tb.appendChild(tr);
+  });
+}
+
+function atualizarStatusMissao(id, novoStatus, selectEl) {
+  selectEl.disabled = true;
+  google.script.run.withSuccessHandler(res => {
+    selectEl.disabled = false;
+    if (!res.success) { alert('Erro: ' + res.message); return; }
+    const m = dadosCache.missoes.find(x => x['ID'] === id);
+    if (m) m['Status'] = novoStatus;
+    selectEl.className = 'status-select ' + (novoStatus === 'Concluída' ? 'text-success' : novoStatus === 'Cancelada' ? 'text-danger' : 'text-primary');
+  }).updateField('⚔️ MISSÕES', id, 'Status', novoStatus);
+}
+
+function verDetalhesMissao(id) {
+  const m = dadosCache.missoes.find(x => x['ID'] === id);
+  if (!m) return;
+  mostrarDetalhe(`⚔️ ${m['Título']}`, `
+    <table class="table table-borderless mb-0">
+      <tr><th width="140">Tipo</th><td>${m['Tipo']||'-'}</td></tr>
+      <tr><th>Status</th><td>${m['Status']||'-'}</td></tr>
+      <tr><th>Data Início</th><td>${fmtData(m['Data Início'])}</td></tr>
+      <tr><th>Data Fim</th><td>${fmtData(m['Data Fim'])}</td></tr>
+      <tr><th>Avaliação Final</th><td>${m['Avaliação Final']||'-'}</td></tr>
+      <tr><th>Descrição</th><td>${m['Descrição']||'<em class="text-muted">Sem descrição</em>'}</td></tr>
+      <tr><th>Observações</th><td>${m['Observações']||'<em class="text-muted">Sem observações</em>'}</td></tr>
+    </table>`);
+}
+
+// ══════════════════════════════════════════════════════════════
+// 📜 TRATADOS
+// ══════════════════════════════════════════════════════════════
+function loadTratados() {
+  document.getElementById('tb-tratados').innerHTML = '<tr><td colspan="5" class="text-center">Lendo os pergaminhos antigos...</td></tr>';
+  google.script.run.withSuccessHandler(data => {
+    dadosCache.tratados = data || [];
+    renderTratados();
+  }).getSheetData('📜 TRATADOS');
+}
+
+function renderTratados() {
+  const tb = document.getElementById('tb-tratados');
+  const sorted = applySort(dadosCache.tratados, 'tratados');
+  tb.innerHTML = '';
+  if (!sorted.length) {
+    tb.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum tratado firmado.</td></tr>';
+    return;
+  }
+  sorted.forEach(t => {
+    const colorClass = t['Status'] === 'Cumprido' ? 'text-success' : (t['Status'] === 'Quebrado' ? 'text-danger' : 'text-primary');
+    const descPreview = String(t['Descrição do Juramento'] || '');
+    const descCurta   = descPreview.length > 60 ? descPreview.slice(0, 57) + '…' : descPreview;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="fw-bold">${t['Título do Tratado']}</td>
+      <td title="${esc(descPreview)}" style="max-width:180px;">
+        <span class="text-muted" style="font-size:0.87rem;">${esc(descCurta)||'-'}</span>
+        ${descPreview.length > 0 ? `<br><a href="#" class="small" onclick="event.stopPropagation();verDetalhesTratado('${esc(t['ID'])}');return false;">ler mais</a>` : ''}
+      </td>
+      <td>${fmtData(t['Data'])}</td>
+      <td>${t['Prazo'] ? fmtData(t['Prazo']) : 'Sem prazo'}</td>
+      <td>
+        <select class="status-select ${colorClass}"
+          onchange="atualizarStatusTratado('${esc(t['ID'])}',this.value,this)"
+          onclick="event.stopPropagation()">
+          <option ${t['Status']==='Vigente'?'selected':''}>Vigente</option>
+          <option ${t['Status']==='Cumprido'?'selected':''}>Cumprido</option>
+          <option ${t['Status']==='Quebrado'?'selected':''}>Quebrado</option>
+        </select>
+      </td>`;
+    // Click na linha também abre detalhes
+    tr.addEventListener('click', e => {
+      if (e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION' || e.target.tagName === 'A') return;
+      verDetalhesTratado(t['ID']);
+    });
+    tb.appendChild(tr);
+  });
+}
+
+function verDetalhesTratado(id) {
+  const t = dadosCache.tratados.find(x => x['ID'] === id);
+  if (!t) return;
+  const colorClass = t['Status'] === 'Cumprido' ? 'text-success' : (t['Status'] === 'Quebrado' ? 'text-danger' : 'text-primary');
+  mostrarDetalhe(`📜 ${t['Título do Tratado']}`, `
+    <table class="table table-borderless mb-0">
+      <tr><th width="120">Status</th><td class="${colorClass} fw-bold">${t['Status']||'-'}</td></tr>
+      <tr><th>Data Início</th><td>${fmtData(t['Data'])}</td></tr>
+      <tr><th>Prazo</th><td>${t['Prazo'] ? fmtData(t['Prazo']) : 'Sem prazo'}</td></tr>
+      <tr><th>Juramento</th><td style="white-space:pre-wrap;">${t['Descrição do Juramento']||'<em class="text-muted">Sem descrição</em>'}</td></tr>
+    </table>`);
+}
+
+function atualizarStatusTratado(id, novoStatus, selectEl) {
+  selectEl.disabled = true;
+  google.script.run.withSuccessHandler(res => {
+    selectEl.disabled = false;
+    if (!res.success) { alert('Erro: ' + res.message); return; }
+    const t = dadosCache.tratados.find(x => x['ID'] === id);
+    if (t) t['Status'] = novoStatus;
+    selectEl.className = 'status-select ' + (novoStatus === 'Cumprido' ? 'text-success' : novoStatus === 'Quebrado' ? 'text-danger' : 'text-primary');
+  }).updateField('📜 TRATADOS', id, 'Status', novoStatus);
+}
+
+// ══════════════════════════════════════════════════════════════
+// 📅 AGENDA
+// ══════════════════════════════════════════════════════════════
+function loadAgenda() {
+  document.getElementById('tb-agenda').innerHTML = '<tr><td colspan="5" class="text-center">Consultando as estrelas...</td></tr>';
+  google.script.run.withSuccessHandler(data => {
+    dadosCache.agenda = data || [];
+    renderAgenda();
+  }).getSheetData('📅 AGENDA');
+}
+
+function renderAgenda() {
+  const tb = document.getElementById('tb-agenda');
+  const sorted = applySort(dadosCache.agenda, 'agenda');
+  tb.innerHTML = '';
+  if (!sorted.length) {
+    tb.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Agenda limpa.</td></tr>';
+    return;
+  }
+  sorted.forEach(a => {
+    const horario = `${a['Hora Início']||'--:--'} – ${a['Hora Fim']||'--:--'}`;
+    const calIcon = (a['Criado no Google Agenda'] === true || a['Criado no Google Agenda'] === 'true') ? '✅' : '❌';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${fmtData(a['Data'])}</td>
+      <td>${horario}</td>
+      <td class="fw-bold">${a['Título']}</td>
+      <td>${a['Local']||'-'}</td>
+      <td class="text-center">${calIcon}</td>`;
+    tr.addEventListener('click', () => {
+      mostrarDetalhe(`📅 ${a['Título']}`, `
+        <table class="table table-borderless mb-0">
+          <tr><th width="120">Data</th><td>${fmtData(a['Data'])}</td></tr>
+          <tr><th>Horário</th><td>${horario}</td></tr>
+          <tr><th>Local</th><td>${a['Local']||'-'}</td></tr>
+          <tr><th>Google Agenda</th><td>${calIcon}</td></tr>
+          <tr><th>Descrição</th><td style="white-space:pre-wrap;">${a['Descrição']||'<em class="text-muted">Sem descrição</em>'}</td></tr>
+        </table>`);
+    });
+    tb.appendChild(tr);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// 📊 PROGRESSO
+// ══════════════════════════════════════════════════════════════
+function loadProgresso() {
+  const mes = document.getElementById('prog-filtro-mes')?.value || '';
+  const ano = document.getElementById('prog-filtro-ano')?.value  || '';
+
+  document.getElementById('mensagem-progresso').className = 'alert alert-secondary text-center';
+  document.getElementById('mensagem-progresso').innerHTML = '<strong>Calculando os registros...</strong>';
+
+  google.script.run.withSuccessHandler(res => {
+    if (!res.success) {
+      document.getElementById('mensagem-progresso').innerHTML = '<strong>Erro ao carregar dados.</strong>';
+      return;
+    }
+
+    function setCard(pctId, subId, pct, conc, total) {
+      const el = document.getElementById(pctId);
+      if (pct === null) { el.textContent = '—'; document.getElementById(subId).textContent = 'sem dados no período'; }
+      else { el.textContent = pct + '%'; document.getElementById(subId).textContent = `${conc} / ${total} concluídas`; }
+    }
+
+    // Mensais
+    setCard('prog-pct-obr',    'prog-sub-obr',    res.taxaObrigacoes,   res.obrConcluidas,       res.obrTotal);
+    setCard('prog-pct-miss-m', 'prog-sub-miss-m', res.txMissoesMensal,  res.missoesMensalConc,   res.missoesMensalTotal);
+    setCard('prog-pct-trat-m', 'prog-sub-trat-m', res.txTratadosMensal, res.tratadosMensalCump,  res.tratadosMensalTotal);
+
+    const geralEl = document.getElementById('prog-pct-geral');
+    geralEl.textContent = res.indiceGeral !== null ? res.indiceGeral + '%' : '—';
+
+    // Anuais
+    setCard('prog-pct-miss-a', 'prog-sub-miss-a', res.txMissoesAnual,  res.missoesAnualConc,  res.missoesAnualTotal);
+    setCard('prog-pct-trat-a', 'prog-sub-trat-a', res.txTratadosAnual, res.tratadosAnualCump, res.tratadosAnualTotal);
+    document.getElementById('prog-obr-ano').textContent = res.obrConcluidasAno;
+
+    // Tesouro
+    document.getElementById('prog-tesouro').textContent    = fmtValor(res.tesouroFinanceiro);
+    document.getElementById('prog-intelectual').textContent = res.ativosIntelectuais;
+    document.getElementById('total-financeiro').textContent = fmtValor(res.tesouroFinanceiro);
+    document.getElementById('total-intelectual').textContent = res.ativosIntelectuais;
+
+    renderGraficoTesouro(res.dadosGraficoTesouro);
+
+    // Mensagem
+    const semDados = res.obrTotal === 0 && res.missoesMensalTotal === 0 && res.tratadosMensalTotal === 0;
+    const msgEl = document.getElementById('mensagem-progresso');
+    if (semDados) {
+      msgEl.className = 'alert alert-secondary text-center';
+      msgEl.innerHTML = '<strong>Nenhum registro encontrado</strong> para o período selecionado.';
+    } else if (res.indiceGeral >= 80) {
+      msgEl.className = 'alert alert-success text-center';
+      msgEl.innerHTML = '<strong>Campanha Honrosa!</strong> A glória está ao seu alcance.';
+    } else if (res.indiceGeral >= 50) {
+      msgEl.className = 'alert alert-warning text-center';
+      msgEl.innerHTML = '<strong>Avanço Consistente.</strong> Mantenha a marcha firme.';
+    } else {
+      msgEl.className = 'alert alert-danger text-center';
+      msgEl.innerHTML = '<strong>Reorganizar Estratégia!</strong> É hora de reagrupar e focar nas prioridades.';
+    }
+  }).getDashboardData(mes, ano);
+}
+
+// ══════════════════════════════════════════════════════════════
+// ENVIO DE FORMULÁRIOS
+// ══════════════════════════════════════════════════════════════
+function submitForm(event, sheetName, formId) {
+  event.preventDefault();
+  let data = [];
+  if (sheetName === '🏰 OBRIGAÇÕES') {
+    data = [document.getElementById('ob-titulo').value, document.getElementById('ob-desc').value,
+            document.getElementById('ob-cat').value,    document.getElementById('ob-mes').value,
+            document.getElementById('ob-data').value,   document.getElementById('ob-prio').value,
+            '', false, ''];
+  } else if (sheetName === '⚔️ MISSÕES') {
+    data = [document.getElementById('ms-titulo').value, document.getElementById('ms-desc').value,
+            document.getElementById('ms-tipo').value,   document.getElementById('ms-status').value,
+            document.getElementById('ms-ini').value,    document.getElementById('ms-fim').value,
+            '', ''];
+  } else if (sheetName === '📜 TRATADOS') {
+    data = [document.getElementById('tr-titulo').value, document.getElementById('tr-desc').value,
+            document.getElementById('tr-data').value,   document.getElementById('tr-prazo').value,
+            document.getElementById('tr-status').value];
+  }
+  google.script.run.withSuccessHandler(res => {
+    if (res.success) {
+      document.getElementById(formId).reset();
+      if (sheetName === '🏰 OBRIGAÇÕES') { fecharModal('modalObrigacao'); loadObrigacoes(true); }
+      if (sheetName === '⚔️ MISSÕES')    { fecharModal('modalMissao');    loadMissoes(); }
+      if (sheetName === '📜 TRATADOS')   { fecharModal('modalTratado');   loadTratados(); }
+    } else alert('Erro: ' + res.message);
+  }).addRecord(sheetName, data);
+}
+
+function submitAgenda(event) {
+  event.preventDefault();
+  const payload = {
+    titulo:     document.getElementById('ag-titulo').value,
+    descricao:  document.getElementById('ag-desc').value,
+    data:       document.getElementById('ag-data').value,
+    horaInicio: document.getElementById('ag-ini').value,
+    horaFim:    document.getElementById('ag-fim').value,
+    local:      document.getElementById('ag-local').value
+  };
+  google.script.run.withSuccessHandler(res => {
+    if (res.success) {
+      document.getElementById('formAgenda').reset();
+      fecharModal('modalAgenda');
+      loadAgenda();
+      alert(res.message);
+    } else alert('Erro: ' + res.message);
+  }).addAgendaRecord(payload);
+}
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # 🛡️ Diário de Campanha - Sistema Gamificado de Gestão Pessoal
 
-O **Diário de Campanha** é um software de gestão de rotina, metas e finanças pessoais projetado com uma estética levemente inspirada em campanhas medievais. Desenvolvido para funcionar inteiramente no ecossistema Google, ele transforma tarefas diárias em "Obrigações" e metas de longo prazo em "Missões", oferecendo uma experiência de uso engajadora, limpa e responsiva.
+O **Diário de Campanha** é um mini-software de gestão de rotina, metas e finanças pessoais projetado com uma estética levemente inspirada em campanhas medievais. Desenvolvido para funcionar inteiramente no ecossistema Google, ele transforma tarefas diárias em "Obrigações" e metas de longo prazo em "Missões", oferecendo uma experiência de uso engajadora, limpa e responsiva.
 
 
 
@@ -98,5 +98,6 @@ Diferente de aplicações locais, este sistema não requer a instalação do Nod
    * Você pode salvar este link nos favoritos do seu navegador ou adicioná-lo à tela inicial do seu smartphone para acessá-lo como um aplicativo nativo.
 
 ---
+
 
 

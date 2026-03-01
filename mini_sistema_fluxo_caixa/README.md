@@ -2,7 +2,7 @@
 
 Este é um mini-sistema de gestão financeira desenvolvido para rodar inteiramente no ecossistema Google (Planilhas + Apps Script). Ele funciona como um **Web App** responsivo, utilizando a Planilha Google apenas como banco de dados.
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
 - **Lançamentos Simples:** Registro de Entradas e Saídas com validação de campos obrigatórios.
 - **Gestão de Contas:** Módulo separado para Contas a Pagar (com categorias via dropdown) e Contas a Receber (por cliente).
@@ -16,7 +16,7 @@ Este é um mini-sistema de gestão financeira desenvolvido para rodar inteiramen
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **Frontend:** HTML5, CSS3 (Bootstrap 5), JavaScript.
 - **Gráficos:** Chart.js.
@@ -25,14 +25,14 @@ Este é um mini-sistema de gestão financeira desenvolvido para rodar inteiramen
 
 ---
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 1. Uma conta Google (Gmail ou Google Workspace).
 2. Uma nova Planilha Google em branco.
 
 ---
 
-## 🔧 Como Instalar
+## Como Instalar
 
 Siga estes passos para colocar o sistema no ar em menos de 5 minutos:
 
@@ -60,9 +60,10 @@ Siga estes passos para colocar o sistema no ar em menos de 5 minutos:
 
 ---
 
-## 💡 Dicas de Uso
+## Dicas de Uso
 
 * **Configurações Iniciais:** Antes de começar, vá na aba `CONFIG` da sua planilha e preencha as colunas de "Categorias" e "Formas de Pagamento" para que os menus dropdown do sistema apareçam preenchidos.
 * **Saldo Inicial:** Defina o valor inicial na aba `CONFIG` (Célula D2) para que o saldo acumulado comece a contar corretamente.
 * **Acesso Mobile:** Como o sistema é responsivo, você pode criar um atalho da URL do Web App na tela inicial do seu smartphone para usá-lo como um aplicativo.
+
 

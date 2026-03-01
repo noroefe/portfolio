@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fluxo de Caixa</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body { background-color: #f8f9fa; font-size: 0.9rem; }
+    .nav-pills .nav-link.active { background-color: #0d6efd; }
+    .card { box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; border: none; }
+    .table-responsive { max-height: 500px; overflow-y: auto; }
+    th { position: sticky; top: 0; background-color: #f1f3f5 !important; cursor: pointer; z-index: 1;}
+    .kpi-value { font-size: 1.5rem; font-weight: bold; }
+    .text-success { color: #198754 !important; }
+    .text-danger { color: #dc3545 !important; }
+    .loader { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1050;}
+  </style>
+</head>
+<body>
+
+<div class="loader spinner-border text-primary" role="status" id="globalLoader">
+  <span class="visually-hidden">Carregando...</span>
+</div>
+
+<div class="container-fluid py-3">
+  <h2 class="mb-4 text-center"><i class="fas fa-wallet"></i> Sistema de Fluxo de Caixa</h2>
+  
+  <div class="card p-3">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label>Período Inicial</label>
+        <input type="date" id="filterStart" class="form-control">
+      </div>
+      <div class="col-md-3">
+        <label>Período Final</label>
+        <input type="date" id="filterEnd" class="form-control">
+      </div>
+      <div class="col-md-3">
+        <label>Regime</label>
+        <select id="filterRegime" class="form-select">
+          <option value="caixa">Regime de Caixa (Data do Pagamento)</option>
+          <option value="competencia">Regime de Competência (Data do Fato/Vencimento)</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary w-100" onclick="applyFilters()"><i class="fas fa-filter"></i> Aplicar Filtros</button>
+      </div>
+    </div>
+  </div>
+
+  <ul class="nav nav-pills mb-4 justify-content-center" id="menuTabs">
+    <li class="nav-item"><a class="nav-link active" href="#" onclick="switchTab('lancamentos')">Lançamentos</a></li>
+    <li class="nav-item"><a class="nav-link" href="#" onclick="switchTab('contas')">Contas a Pagar/Receber</a></li>
+    <li class="nav-item"><a class="nav-link" href="#" onclick="switchTab('resumo')">Resumo Diário</a></li>
+    <li class="nav-item"><a class="nav-link" href="#" onclick="switchTab('estatisticas')">Estatísticas</a></li>
+  </ul>
+
+  <div id="view-lancamentos" class="view-section">
+    <div class="card p-3">
+      <div class="d-flex justify-content-between mb-3">
+        <h4>Lançamentos Realizados</h4>
+        <button class="btn btn-success" onclick="openLancamentoModal()"><i class="fas fa-plus"></i> Novo Lançamento</button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th onclick="sortTable('tableLancamentos', 0)">Data <i class="fas fa-sort"></i></th>
+              <th onclick="sortTable('tableLancamentos', 1)">Tipo <i class="fas fa-sort"></i></th>
+              <th onclick="sortTable('tableLancamentos', 2)">Categoria <i class="fas fa-sort"></i></th>
+              <th>Descrição</th>
+              <th onclick="sortTable('tableLancamentos', 4)">Valor <i class="fas fa-sort"></i></th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tableLancamentos"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-contas" class="view-section" style="display:none;">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card p-3">
+          <div class="d-flex justify-content-between mb-3">
+            <h5 class="text-danger">Contas a Pagar</h5>
+            <button class="btn btn-sm btn-outline-danger" onclick="openContaModal('CONTAS_A_PAGAR')"><i class="fas fa-plus"></i> Nova</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead><tr><th>Vencimento</th><th>Descrição</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="tablePagar"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-3">
+          <div class="d-flex justify-content-between mb-3">
+            <h5 class="text-success">Contas a Receber</h5>
+            <button class="btn btn-sm btn-outline-success" onclick="openContaModal('CONTAS_A_RECEBER')"><i class="fas fa-plus"></i> Nova</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead><tr><th>Vencimento</th><th>Descrição</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="tableReceber"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-resumo" class="view-section" style="display:none;">
+    <div class="card p-3">
+      <h4>Resumo Diário (Filtrado)</h4>
+      <div class="table-responsive">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr><th>Data</th><th class="text-success">Entradas</th><th class="text-danger">Saídas</th><th>Saldo do Dia</th><th>Saldo Acumulado</th></tr>
+          </thead>
+          <tbody id="tableResumo"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-estatisticas" class="view-section" style="display:none;">
+    
+    <div class="row text-center mb-4">
+      <div class="col-md-3">
+        <div class="card p-3">
+          <h6>Saldo Atual (Acumulado)</h6>
+          <div id="kpiSaldoAtual" class="kpi-value">-</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-3">
+          <h6>Necessidade de Capital (Mês)</h6>
+          <div id="kpiNecessidade" class="kpi-value">-</div>
+          <small class="text-muted">Contas a Pagar - (Saldo + Receber)</small>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-3">
+          <h6>Ciclo Financeiro (Mês Atual + Próximo)</h6>
+          <div id="kpiCiclo" class="kpi-value">-</div>
+          <small class="text-muted">Se verde, você tem fundos/recebíveis suficientes para as contas futuras.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card p-3"><canvas id="chartEvolucao" height="100"></canvas></div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3"><canvas id="chartFormas" height="200"></canvas></div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-3">
+          <h6 class="text-center">Onde gasto mais? (Despesas por Categoria)</h6>
+          <canvas id="chartCategorias" height="150"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-3">
+          <h6 class="text-center">Períodos de Maior Gasto/Ganho (Dias do Mês)</h6>
+          <canvas id="chartPeriodos" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="modalLancamento" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Registrar Lançamento</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <form id="formLancamento">
+          <input type="hidden" id="lanIndex">
+          <div class="row g-2">
+            <div class="col-6"><label>Data*</label><input type="date" id="lanData" class="form-control" required></div>
+            <div class="col-6"><label>Competência*</label><input type="date" id="lanComp" class="form-control" required></div>
+            <div class="col-6"><label>Tipo*</label><select id="lanTipo" class="form-select" required></select></div>
+            <div class="col-6"><label>Categoria*</label><select id="lanCat" class="form-select" required></select></div>
+            <div class="col-12"><label>Descrição</label><input type="text" id="lanDesc" class="form-control"></div>
+            <div class="col-6"><label>Forma de Pagamento</label><select id="lanForma" class="form-select"></select></div>
+            <div class="col-6"><label>Valor*</label><input type="number" step="0.01" min="0.01" id="lanValor" class="form-control" required></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="saveLancamento()">Salvar</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalConta" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title" id="titleModalConta">Conta</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <form id="formConta">
+          <input type="hidden" id="contaIndex">
+          <input type="hidden" id="contaType">
+          <div class="row g-2">
+            <div class="col-6"><label>Vencimento*</label><input type="date" id="contaVenc" class="form-control" required></div>
+            <div class="col-6"><label>Valor*</label><input type="number" step="0.01" min="0.01" id="contaValor" class="form-control" required></div>
+            <div class="col-12">
+  <label id="labelContaCliCat">Categoria/Cliente*</label>
+  <div id="wrapperContaCat">
+    <select id="contaCatSelect" class="form-select" style="display:none;"></select>
+    <input type="text" id="contaCliInput" class="form-control" placeholder="Nome do Cliente" style="display:none;">
+  </div>
+</div>
+            <div class="col-12"><label>Descrição</label><input type="text" id="contaDesc" class="form-control"></div>
+            <div class="col-12"><label>Status</label>
+              <select id="contaStatus" class="form-select">
+                <option value="Pendente">Pendente</option>
+                <option value="Pago">Pago / Recebido</option>
+              </select>
+            </div>
+            <div class="col-12" id="divBaixa" style="display:none;">
+              <hr><h6>Detalhes da Baixa (Gerar Lançamento)</h6>
+              <div class="row g-2">
+                <div class="col-6"><label>Data Pgto.</label><input type="date" id="contaDataPgto" class="form-control"></div>
+                <div class="col-6"><label>Forma Pgto.</label><select id="contaFormaPgto" class="form-select"></select></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="saveConta()">Salvar</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  let db = { config: {}, lancamentos: [], pagar: [], receber: [] };
+  let charts = {};
+
+  // ==========================================
+  // INICIALIZAÇÃO & DADOS
+  // ==========================================
+  window.onload = () => {
+    let date = new Date();
+    document.getElementById('filterStart').value = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+    document.getElementById('filterEnd').value = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
+    loadData();
+    document.getElementById('contaStatus').addEventListener('change', function() {
+      document.getElementById('divBaixa').style.display = this.value === 'Pago' ? 'block' : 'none';
+    });
+  };
+
+  function showLoader(show) { document.getElementById('globalLoader').style.display = show ? 'block' : 'none'; }
+
+  function loadData() {
+    showLoader(true);
+    google.script.run
+      .withSuccessHandler(res => {
+        db = JSON.parse(res);
+        populateSelects();
+        applyFilters();
+        showLoader(false);
+      })
+      .withFailureHandler(err => {
+        showLoader(false);
+        Swal.fire('Erro', err.message, 'error');
+      })
+      .getAllData();
+  }
+
+  function populateSelects() {
+    const buildOptions = arr => arr.map(i => `<option value="${i}">${i}</option>`).join('');
+    document.getElementById('lanTipo').innerHTML = buildOptions(db.config.tipos);
+    document.getElementById('lanCat').innerHTML = buildOptions(db.config.categorias);
+    document.getElementById('lanForma').innerHTML = buildOptions(db.config.formasPagamento);
+    document.getElementById('contaFormaPgto').innerHTML = buildOptions(db.config.formasPagamento);
+    document.getElementById('contaCatSelect').innerHTML = '<option value="">Selecione...</option>' + buildOptions(db.config.categorias);
+  }
+
+  // ==========================================
+  // NAVEGAÇÃO E RENDERIZAÇÃO
+  // ==========================================
+  function switchTab(tabId) {
+    document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+    document.getElementById(`view-${tabId}`).style.display = 'block';
+    event.target.classList.add('active');
+    applyFilters();
+  }
+
+  function applyFilters() {
+    renderLancamentos();
+    renderContas();
+    renderResumo();
+    renderEstatisticas();
+  }
+
+  function isWithinFilter(item, dateField) {
+    let start = document.getElementById('filterStart').value;
+    let end = document.getElementById('filterEnd').value;
+    let val = item[dateField];
+    if(!val) return false;
+    if(start && val < start) return false;
+    if(end && val > end) return false;
+    return true;
+  }
+
+  // ==========================================
+  // RENDER: LANÇAMENTOS
+  // ==========================================
+  function renderLancamentos() {
+    let regime = document.getElementById('filterRegime').value;
+    let dateField = regime === 'caixa' ? 'Data' : 'Competência';
+    let html = '';
+    db.lancamentos.forEach(lan => {
+      if (isWithinFilter(lan, dateField)) {
+        let isEntrada = lan.Tipo.toLowerCase() === 'entrada';
+        let cor = isEntrada ? 'text-success' : 'text-danger';
+        html += `<tr>
+          <td>${formatDate(lan[dateField])}</td>
+          <td><span class="badge ${isEntrada ? 'bg-success' : 'bg-danger'}">${lan.Tipo}</span></td>
+          <td>${lan.Categoria}</td>
+          <td>${lan.Descrição || ''}</td>
+          <td class="${cor}">R$ ${parseFloat(lan.Valor).toFixed(2)}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" onclick="deleteRec('LANCAMENTOS', ${lan._rowIndex})"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>`;
+      }
+    });
+    document.getElementById('tableLancamentos').innerHTML = html;
+  }
+
+  // ==========================================
+  // RENDER: CONTAS A PAGAR/RECEBER
+  // ==========================================
+  function renderContas() {
+    const buildRow = (item, type) => {
+      if(!isWithinFilter(item, 'Vencimento')) return '';
+      let cor = item.Status === 'Pago' ? 'text-success' : (item.Vencimento < new Date().toISOString().split('T')[0] ? 'text-danger' : '');
+      return `<tr class="${cor}">
+        <td>${formatDate(item.Vencimento)}</td>
+        <td>${item.Descrição || (type=='PAGAR'?item.Categoria:item.Cliente)}</td>
+        <td>R$ ${parseFloat(item.Valor).toFixed(2)}</td>
+        <td>${item.Status}</td>
+        <td>
+           ${item.Status === 'Pendente' ? `<button class="btn btn-sm btn-success" onclick="openBaixaModal('${type}', ${item._rowIndex})"><i class="fas fa-check"></i></button>` : ''}
+           <button class="btn btn-sm btn-danger" onclick="deleteRec('CONTAS_A_${type}', ${item._rowIndex})"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`;
+    };
+    document.getElementById('tablePagar').innerHTML = db.pagar.map(i => buildRow(i, 'PAGAR')).join('');
+    document.getElementById('tableReceber').innerHTML = db.receber.map(i => buildRow(i, 'RECEBER')).join('');
+  }
+
+  // ==========================================
+  // RENDER: RESUMO DIÁRIO E ESTATÍSTICAS
+  // ==========================================
+  function renderResumo() {
+    let regime = document.getElementById('filterRegime').value;
+    let dateField = regime === 'caixa' ? 'Data' : 'Competência';
+    let start = document.getElementById('filterStart').value;
+    let saldoAcumulado = db.config.saldoInicial;
+    db.lancamentos.forEach(lan => {
+      if (lan[dateField] && lan[dateField] < start) {
+        let v = parseFloat(lan.Valor);
+        saldoAcumulado += lan.Tipo.toLowerCase() === 'entrada' ? v : -v;
+      }
+    });
+    let diario = {};
+    db.lancamentos.filter(lan => isWithinFilter(lan, dateField)).forEach(lan => {
+      let d = lan[dateField];
+      if (!diario[d]) diario[d] = { entradas: 0, saidas: 0 };
+      let v = parseFloat(lan.Valor);
+      if (lan.Tipo.toLowerCase() === 'entrada') diario[d].entradas += v;
+      else diario[d].saidas += v;
+    });
+    let html = '';
+    Object.keys(diario).sort().forEach(d => {
+      let saldoDia = diario[d].entradas - diario[d].saidas;
+      saldoAcumulado += saldoDia;
+      html += `<tr>
+        <td>${formatDate(d)}</td>
+        <td class="text-success">R$ ${diario[d].entradas.toFixed(2)}</td>
+        <td class="text-danger">R$ ${diario[d].saidas.toFixed(2)}</td>
+        <td class="${saldoDia >= 0 ? 'text-success' : 'text-danger'}">R$ ${saldoDia.toFixed(2)}</td>
+        <td class="${saldoAcumulado >= 0 ? 'text-success' : 'text-danger'} fw-bold">R$ ${saldoAcumulado.toFixed(2)}</td>
+      </tr>`;
+    });
+    document.getElementById('tableResumo').innerHTML = html;
+  }
+
+  function renderEstatisticas() {
+    if (document.getElementById('view-estatisticas').style.display === 'none') return;
+    
+    let regime = document.getElementById('filterRegime').value;
+    let dateField = regime === 'caixa' ? 'Data' : 'Competência';
+    let filteredLans = db.lancamentos.filter(lan => isWithinFilter(lan, dateField));
+
+    // 1. Saldo Atual
+    let saldoAtual = db.config.saldoInicial;
+    db.lancamentos.forEach(lan => {
+      let v = parseFloat(lan.Valor);
+      saldoAtual += lan.Tipo.toLowerCase() === 'entrada' ? v : -v;
+    });
+    document.getElementById('kpiSaldoAtual').innerHTML = `R$ ${saldoAtual.toFixed(2)}`;
+    document.getElementById('kpiSaldoAtual').className = `kpi-value ${saldoAtual >= 0 ? 'text-success' : 'text-danger'}`;
+
+    // 2. Necessidade de Capital
+    let start = document.getElementById('filterStart').value;
+    let end = document.getElementById('filterEnd').value;
+    let pagarMes = db.pagar.filter(p => p.Status === 'Pendente' && p.Vencimento >= start && p.Vencimento <= end)
+      .reduce((acc, curr) => acc + parseFloat(curr.Valor), 0);
+    let receberMes = db.receber.filter(r => r.Status === 'Pendente' && r.Vencimento >= start && r.Vencimento <= end)
+      .reduce((acc, curr) => acc + parseFloat(curr.Valor), 0);
+    let necessidade = pagarMes - (saldoAtual + receberMes);
+    document.getElementById('kpiNecessidade').innerHTML = necessidade > 0 ? `R$ ${necessidade.toFixed(2)}` : 'R$ 0.00 (Saudável)';
+    document.getElementById('kpiNecessidade').className = `kpi-value ${necessidade > 0 ? 'text-danger' : 'text-success'}`;
+
+    // 3. Ciclo Financeiro
+    let hoje = new Date();
+    let fimProximoMes = new Date(hoje.getFullYear(), hoje.getMonth() + 2, 0).toISOString().split('T')[0];
+    let pagarFuturo = db.pagar.filter(p => p.Status === 'Pendente' && p.Vencimento <= fimProximoMes)
+      .reduce((acc, curr) => acc + parseFloat(curr.Valor), 0);
+    let receberFuturo = db.receber.filter(r => r.Status === 'Pendente' && r.Vencimento <= fimProximoMes)
+      .reduce((acc, curr) => acc + parseFloat(curr.Valor), 0);
+    let ciclo = (saldoAtual + receberFuturo) - pagarFuturo;
+    document.getElementById('kpiCiclo').innerHTML = ciclo >= 0 ? 'Seguro' : 'Risco';
+    document.getElementById('kpiCiclo').className = `kpi-value ${ciclo >= 0 ? 'text-success' : 'text-danger'}`;
+
+    // Preparar dados para Gráficos
+    let catGastos = {};
+    let formasPgto = {};
+    let diasGastos = Array(31).fill(0);
+    let diasGanhos = Array(31).fill(0);
+    let evolucaoDatas = [];
+    let evolucaoSaldos = [];
+    
+    let saldoEvol = db.config.saldoInicial;
+    let allLans = [...db.lancamentos].sort((a,b) => a[dateField].localeCompare(b[dateField]));
+    
+    allLans.forEach(lan => {
+      let v = parseFloat(lan.Valor);
+      let isEntrada = lan.Tipo.toLowerCase() === 'entrada';
+      saldoEvol += isEntrada ? v : -v;
+      
+      if(isWithinFilter(lan, dateField)) {
+        // Evolução
+        if(!evolucaoDatas.includes(lan[dateField])) {
+          evolucaoDatas.push(lan[dateField]);
+          evolucaoSaldos.push(saldoEvol);
+        } else {
+          evolucaoSaldos[evolucaoSaldos.length-1] = saldoEvol;
+        }
+
+        let dia = parseInt(lan[dateField].split('-')[2]) - 1;
+        
+        if (!isEntrada) {
+          // Saídas: acumula por categoria e por dia
+          catGastos[lan.Categoria] = (catGastos[lan.Categoria] || 0) + v;
+          diasGastos[dia] += v;
+        } else {
+          // Entradas: acumula por dia e por forma de pagamento (apenas entradas)
+          diasGanhos[dia] += v;
+          let forma = lan['Forma de Pagamento'];
+          if (forma) {
+            formasPgto[forma] = (formasPgto[forma] || 0) + v;
+          }
+        }
+      }
+    });
+
+    // Destruir gráficos antigos se existirem
+    Object.keys(charts).forEach(k => { if(charts[k]) charts[k].destroy(); });
+
+    // Chart Categorias (Doughnut)
+    charts.cat = new Chart(document.getElementById('chartCategorias'), {
+      type: 'doughnut',
+      data: { labels: Object.keys(catGastos), datasets: [{ data: Object.values(catGastos), backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#20c997', '#0dcaf0', '#6f42c1'] }] }
+    });
+
+    // Chart Formas Pgto (Pie) — somente entradas
+    charts.forma = new Chart(document.getElementById('chartFormas'), {
+      type: 'pie',
+      data: {
+        labels: Object.keys(formasPgto),
+        datasets: [{
+          data: Object.values(formasPgto),
+          backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#6c757d']
+        }]
+      },
+      options: {
+        plugins: {
+          title: { display: true, text: 'Formas de Pagamento (Entradas)' }
+        }
+      }
+    });
+
+    // Chart Períodos (Bar)
+    let diasLabels = Array.from({length: 31}, (_, i) => i + 1);
+    charts.periodo = new Chart(document.getElementById('chartPeriodos'), {
+      type: 'bar',
+      data: { 
+        labels: diasLabels, 
+        datasets: [
+          { label: 'Saídas', data: diasGastos, backgroundColor: '#dc3545' },
+          { label: 'Entradas', data: diasGanhos, backgroundColor: '#198754' }
+        ] 
+      },
+      options: { scales: { x: { stacked: true }, y: { stacked: true } } }
+    });
+
+    // Chart Evolução (Line)
+    charts.evol = new Chart(document.getElementById('chartEvolucao'), {
+      type: 'line',
+      data: { labels: evolucaoDatas.map(formatDate), datasets: [{ label: 'Evolução do Saldo', data: evolucaoSaldos, borderColor: '#0d6efd', fill: true, backgroundColor: 'rgba(13, 110, 253, 0.1)', tension: 0.1 }] }
+    });
+  }
+
+  // ==========================================
+  // CRUD ACTIONS E MODAIS
+  // ==========================================
+  function openLancamentoModal() {
+    document.getElementById('formLancamento').reset();
+    document.getElementById('lanIndex').value = '';
+    let hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('lanData').value = hoje;
+    document.getElementById('lanComp').value = hoje;
+    new bootstrap.Modal(document.getElementById('modalLancamento')).show();
+  }
+
+  function saveLancamento() {
+    if(!document.getElementById('formLancamento').checkValidity()) {
+      Swal.fire('Aviso', 'Preencha todos os campos obrigatórios (Data, Tipo, Categoria, Valor).', 'warning');
+      return;
+    }
+    showLoader(true);
+    let data = {
+      'Data': document.getElementById('lanData').value,
+      'Competência': document.getElementById('lanComp').value,
+      'Tipo': document.getElementById('lanTipo').value,
+      'Categoria': document.getElementById('lanCat').value,
+      'Descrição': document.getElementById('lanDesc').value,
+      'Forma de Pagamento': document.getElementById('lanForma').value,
+      'Valor': Math.abs(parseFloat(document.getElementById('lanValor').value))
+    };
+    google.script.run
+      .withSuccessHandler(() => {
+        bootstrap.Modal.getInstance(document.getElementById('modalLancamento')).hide();
+        loadData();
+      })
+      .withFailureHandler(err => { showLoader(false); Swal.fire('Erro', err.message, 'error'); })
+      .saveRecord('LANCAMENTOS', data, document.getElementById('lanIndex').value);
+  }
+
+  function openContaModal(type) {
+    document.getElementById('formConta').reset();
+    document.getElementById('contaIndex').value = '';
+    document.getElementById('contaType').value = type;
+    const isPagar = type === 'CONTAS_A_PAGAR';
+    document.getElementById('titleModalConta').innerText = isPagar ? 'Nova Conta a Pagar' : 'Nova Conta a Receber';
+    if (isPagar) {
+      document.getElementById('labelContaCliCat').innerText = 'Categoria*';
+      document.getElementById('contaCatSelect').style.display = 'block';
+      document.getElementById('contaCliInput').style.display = 'none';
+      document.getElementById('contaCatSelect').required = true;
+      document.getElementById('contaCliInput').required = false;
+    } else {
+      document.getElementById('labelContaCliCat').innerText = 'Cliente*';
+      document.getElementById('contaCatSelect').style.display = 'none';
+      document.getElementById('contaCliInput').style.display = 'block';
+      document.getElementById('contaCatSelect').required = false;
+      document.getElementById('contaCliInput').required = true;
+    }
+    document.getElementById('contaStatus').value = 'Pendente';
+    document.getElementById('divBaixa').style.display = 'none';
+    new bootstrap.Modal(document.getElementById('modalConta')).show();
+  }
+
+  function openBaixaModal(type, rowIndex) {
+    let conta = db[type.toLowerCase()].find(c => c._rowIndex == rowIndex);
+    if(!conta) return;
+    openContaModal(`CONTAS_A_${type}`);
+    document.getElementById('contaIndex').value = rowIndex;
+    document.getElementById('contaVenc').value = conta.Vencimento;
+    document.getElementById('contaValor').value = conta.Valor;
+    document.getElementById('contaCliCat').value = type === 'PAGAR' ? conta.Categoria : conta.Cliente;
+    document.getElementById('contaDesc').value = conta.Descrição;
+    document.getElementById('contaStatus').value = 'Pago';
+    document.getElementById('divBaixa').style.display = 'block';
+    document.getElementById('contaDataPgto').value = new Date().toISOString().split('T')[0];
+  }
+
+  function saveConta() {
+    const type = document.getElementById('contaType').value;
+    const rowIndex = document.getElementById('contaIndex').value;
+    const isPagar = type === 'CONTAS_A_PAGAR';
+    const valCatCli = isPagar ? document.getElementById('contaCatSelect').value : document.getElementById('contaCliInput').value;
+    if(!document.getElementById('contaVenc').value || !document.getElementById('contaValor').value || !valCatCli) {
+      Swal.fire('Aviso', 'Preencha Vencimento, Valor e ' + (isPagar ? 'Categoria' : 'Cliente') + '.', 'warning');
+      return;
+    }
+    showLoader(true);
+    const isBaixa = document.getElementById('contaStatus').value === 'Pago';
+    let contaData = {
+      'Vencimento': document.getElementById('contaVenc').value,
+      'Descrição': document.getElementById('contaDesc').value,
+      'Valor': Math.abs(parseFloat(document.getElementById('contaValor').value)),
+      'Status': document.getElementById('contaStatus').value
+    };
+    contaData[isPagar ? 'Categoria' : 'Cliente'] = valCatCli;
+    if (isBaixa) {
+      const dataPgto = document.getElementById('contaDataPgto').value || new Date().toISOString().split('T')[0];
+      contaData[isPagar ? 'Data de Pagamento' : 'Data de Recebimento'] = dataPgto;
+      let lancamentoData = {
+        'Data': dataPgto,
+        'Competência': contaData.Vencimento,
+        'Tipo': isPagar ? 'Saída' : 'Entrada',
+        'Categoria': isPagar ? valCatCli : 'Recebimento de Cliente',
+        'Descrição': `Baixa: ${contaData.Descrição || valCatCli}`,
+        'Forma de Pagamento': document.getElementById('contaFormaPgto').value,
+        'Valor': contaData.Valor,
+        'Observação': 'Gerado automaticamente via Baixa de Conta'
+      };
+      google.script.run
+        .withSuccessHandler(() => {
+          bootstrap.Modal.getInstance(document.getElementById('modalConta')).hide();
+          Swal.fire('Sucesso', 'Conta baixada e Lançamento gerado!', 'success');
+          loadData();
+        })
+        .withFailureHandler(err => { showLoader(false); Swal.fire('Erro', err.message, 'error'); })
+        .payAccount(type, rowIndex, contaData, lancamentoData);
+    } else {
+      google.script.run
+        .withSuccessHandler(() => {
+          bootstrap.Modal.getInstance(document.getElementById('modalConta')).hide();
+          Swal.fire('Sucesso', 'Conta salva com sucesso!', 'success');
+          loadData();
+        })
+        .withFailureHandler(err => { showLoader(false); Swal.fire('Erro', err.message, 'error'); })
+        .saveRecord(type, contaData, rowIndex);
+    }
+  }
+
+  function deleteRec(sheetName, rowIndex) {
+    Swal.fire({ title: 'Tem certeza?', text: "Esta ação não pode ser desfeita.", icon: 'warning', showCancelButton: true, confirmButtonText: 'Sim, apagar!' })
+    .then((result) => {
+      if (result.isConfirmed) {
+        showLoader(true);
+        google.script.run
+          .withSuccessHandler(() => loadData())
+          .withFailureHandler(err => { showLoader(false); Swal.fire('Erro', err.message, 'error'); })
+          .deleteRecord(sheetName, rowIndex);
+      }
+    });
+  }
+
+  // ==========================================
+  // UTILS
+  // ==========================================
+  let sortDirection = {};
+  function sortTable(tbodyId, colIndex) {
+    let tbody = document.getElementById(tbodyId);
+    let rows = Array.from(tbody.querySelectorAll('tr'));
+    let dir = sortDirection[colIndex] === 'asc' ? 'desc' : 'asc';
+    sortDirection[colIndex] = dir;
+    rows.sort((a, b) => {
+      let valA = a.cells[colIndex].innerText.trim();
+      let valB = b.cells[colIndex].innerText.trim();
+      if(valA.startsWith('R$')) {
+        valA = parseFloat(valA.replace('R$', '').replace('.', '').replace(',', '.'));
+        valB = parseFloat(valB.replace('R$', '').replace('.', '').replace(',', '.'));
+      } else if(valA.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        valA = valA.split('/').reverse().join('');
+        valB = valB.split('/').reverse().join('');
+      }
+      if (valA < valB) return dir === 'asc' ? -1 : 1;
+      if (valA > valB) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+    tbody.innerHTML = '';
+    rows.forEach(row => tbody.appendChild(row));
+  }
+
+  function formatDate(isoString) {
+    if(!isoString) return '';
+    const [y, m, d] = isoString.split('-');
+    return `${d}/${m}/${y}`;
+  }
+</script>
+</body>
+</html>

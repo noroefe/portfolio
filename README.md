@@ -110,4 +110,4 @@ Desenvolvido para oferecer controle simples sobre a saúde financeira de pequeno
 | **Ano de Criação** | 2026 |
 | **Objetivo** | Centralização de fluxo de caixa com suporte a múltiplos regimes contábeis e automação de lançamentos via gestão de contas a pagar/receber. |
 | **Principais Funcionalidades** | Alternância dinâmica entre Regime de Caixa/Competência, Baixa automática de duplicatas com geração de lançamentos e Dashboard de métricas financeiras (Necessidade de Capital e Ciclo Financeiro). |
-| **Acessar README** | [LINK]([https://github.com/noroefe/portfolio/blob/main/diarioCampanha](https://github.com/noroefe/portfolio/tree/main/mini_sistema_fluxo_caixa)/README.md) |
+| **Acessar README** | [LINK](https://github.com/noroefe/portfolio/tree/main/mini_sistema_fluxo_caixa/README.md) |

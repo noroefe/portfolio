@@ -98,3 +98,16 @@ Desenvolvido para transformar a gestão de rotina em uma jornada épica, este si
 | **Objetivo** | Gamificação da rotina pessoal e centralização de métricas de progresso (financeiro, intelectual e produtividade). |
 | **Principais Funcionalidades** | Gestão de Obrigações e Missões, Sincronização automática com Google Agenda e Dashboard de métricas com Chart.js. |
 | **Acessar README** | [LINK](https://github.com/noroefe/portfolio/blob/main/diarioCampanha/README.md) |
+
+### 💰 Mini-Sistema Fluxo de Caixa
+
+Desenvolvido para oferecer controle simples sobre a saúde financeira de pequenos negócios, permitindo o gerenciamento de lançamentos e contas.
+
+| **Descrição** | **Detalhes** |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Nome do Projeto** | Mini-Sistema Fluxo de Caixa |
+| **Ferramentas Utilizadas** | [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Google Apps Script](https://img.shields.io/badge/Apps%20Script-4285F4?style=flat&logo=google-apps-script&logoColor=white)](https://developers.google.com/apps-script) [![Google Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?style=flat&logo=google-sheets&logoColor=white)](https://www.google.com/sheets/about/) [![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)](https://getbootstrap.com/) |
+| **Ano de Criação** | 2026 |
+| **Objetivo** | Centralização de fluxo de caixa com suporte a múltiplos regimes contábeis e automação de lançamentos via gestão de contas a pagar/receber. |
+| **Principais Funcionalidades** | Alternância dinâmica entre Regime de Caixa/Competência, Baixa automática de duplicatas com geração de lançamentos e Dashboard de métricas financeiras (Necessidade de Capital e Ciclo Financeiro). |
+| **Acessar README** | [LINK]([https://github.com/noroefe/portfolio/blob/main/fluxoCaixa](https://github.com/noroefe/portfolio/tree/main/mini_sistema_fluxo_caixa)/README.md) |

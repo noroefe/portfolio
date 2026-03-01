@@ -2,6 +2,22 @@
 
 Este é um mini-sistema de gestão financeira desenvolvido para rodar inteiramente no ecossistema Google (Planilhas + Apps Script). Ele funciona como um **Web App** responsivo, utilizando a Planilha Google apenas como banco de dados.
 
+## Screenshots
+
+### Tela Inicial (Gestão de Lançamentos)
+![Tela Inicial](https://github.com/noroefe/portfolio/blob/main/mini_sistema_fluxo_caixa/tela_1.PNG)
+*Interface limpa com listagem dinâmica e filtros de período/regime.*
+
+### Dashboard e Estatísticas
+![Estatísticas](https://github.com/noroefe/portfolio/blob/main/mini_sistema_fluxo_caixa/tela_2.PNG)
+*Análise visual com Chart.js, indicadores de saúde financeira e necessidade de capital.*
+
+### Modal de Contas a Pagar
+![Modal Inserção](https://github.com/noroefe/portfolio/blob/main/mini_sistema_fluxo_caixa/tela_3.PNG)
+*Formulário inteligente com dropdown de categorias integrado à aba CONFIG.*
+
+---
+
 ## Funcionalidades
 
 - **Lançamentos Simples:** Registro de Entradas e Saídas com validação de campos obrigatórios.

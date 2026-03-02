@@ -4,7 +4,7 @@ O **Diário de Campanha** é um mini-software de gestão de rotina, metas e fina
 
 
 
-## ⚙️ Metodologia
+## Metodologia
 
 O desenvolvimento deste projeto focou na criação de uma aplicação leve, de alta disponibilidade e sem a necessidade de infraestrutura de servidores complexa. A arquitetura segue o padrão Modelo-Visão-Controlador (MVC) adaptado para o ecossistema Google:
 
@@ -14,7 +14,7 @@ O desenvolvimento deste projeto focou na criação de uma aplicação leve, de a
 
 
 
-## 🏗️ Arquitetura e Integração com a Planilha
+## Arquitetura e Integração com a Planilha
 
 Diferente de sistemas tradicionais que usam bancos de dados relacionais estritos, este sistema utiliza o Google Sheets de forma otimizada:
 
@@ -24,13 +24,13 @@ Diferente de sistemas tradicionais que usam bancos de dados relacionais estritos
 
 
 
-## 🏆 Resultados
+## Resultados
 
 O resultado é um Web App funcional, rápido e sem custos de hospedagem para o usuário final. Ele oferece uma plataforma eficiente para acompanhamento de métricas de sucesso pessoal, gestão de compromissos automatizados com o Google Agenda e controle financeiro, tudo em um painel gamificado e intuitivo.
 
 
 
-## 🖥️ Interface do Usuário
+## Interface do Usuário
 
 
 ### Tela Inicial
@@ -55,7 +55,7 @@ O resultado é um Web App funcional, rápido e sem custos de hospedagem para o u
 
 
 
-## 🚀 Instalação e Uso
+## Instalação e Uso
 
 Diferente de aplicações locais, este sistema não requer a instalação do Node.js, MySQL ou hospedagem na sua máquina. Tudo é executado diretamente na nuvem do Google.
 
@@ -98,6 +98,7 @@ Diferente de aplicações locais, este sistema não requer a instalação do Nod
    * Você pode salvar este link nos favoritos do seu navegador ou adicioná-lo à tela inicial do seu smartphone para acessá-lo como um aplicativo nativo.
 
 ---
+
 
 
 

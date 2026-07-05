@@ -25,7 +25,6 @@ Este projeto foi estruturado como um **script independente**. Ele não precisa e
 .
 ├── Code.gs
 ├── Index.html
-├── appsscript.json
 ├── README.md
 ├── LICENSE
 ```

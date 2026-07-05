@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pesquisa de Preços CATMAT/CATSER</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #0d6efd;
+      --verde: #198754;
+      --bg: #f4f7f8;
+      --texto: #1d2630;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--texto);
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 22px;
+    }
+
+    .main-card {
+      max-width: 1180px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, .08);
+    }
+
+    .app-title {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .app-title h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .app-title p {
+      color: #6c757d;
+      margin: 0;
+      font-size: .9rem;
+    }
+
+    .tipo-selector {
+      display: flex;
+      border: 2px solid var(--azul);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .tipo-selector.catser {
+      border-color: var(--verde);
+    }
+
+    .tipo-btn {
+      flex: 1;
+      padding: 12px 10px;
+      border: 0;
+      background: #fff;
+      color: var(--azul);
+      font-weight: 800;
+      transition: .15s ease-in-out;
+    }
+
+    .tipo-selector.catser .tipo-btn {
+      color: var(--verde);
+    }
+
+    .tipo-btn.ativo-catmat {
+      background: var(--azul);
+      color: #fff;
+    }
+
+    .tipo-btn.ativo-catser {
+      background: var(--verde);
+      color: #fff;
+    }
+
+    .form-label {
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .045em;
+      color: #59616c;
+      margin-bottom: 4px;
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 16px 0 12px;
+    }
+
+    .loading-box {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #d8e2f3;
+      background: #f5f9ff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+
+    .loading-box.catser {
+      border-color: #cdebdc;
+      background: #f4fff8;
+    }
+
+    .loading-box.show {
+      display: flex;
+    }
+
+    .loading-text strong {
+      display: block;
+      font-size: .95rem;
+    }
+
+    .loading-text span {
+      color: #6c757d;
+      font-size: .85rem;
+    }
+
+    .progress-line {
+      position: relative;
+      height: 3px;
+      border-radius: 999px;
+      background: #dce7f7;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-line::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -35%;
+      width: 35%;
+      height: 100%;
+      background: currentColor;
+      animation: progress 1.1s linear infinite;
+    }
+
+    @keyframes progress {
+      from { left: -35%; }
+      to { left: 100%; }
+    }
+
+    #results,
+    #errorMsg,
+    #barraLote,
+    #resumoSelecionados,
+    #painelCarrinho {
+      display: none;
+    }
+
+    .table thead th {
+      white-space: nowrap;
+    }
+
+    .col-check {
+      width: 42px;
+      text-align: center;
+    }
+
+    tr.selecionada td {
+      background: #e9f2ff !important;
+    }
+
+    .barra-lote {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, .12);
+    }
+
+    .barra-lote.catmat {
+      background: var(--azul);
+    }
+
+    .barra-lote.catser {
+      background: var(--verde);
+    }
+
+    .barra-lote .acoes {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .carrinho-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      margin-left: 4px;
+      background: #dc3545;
+      color: #fff;
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 800;
+    }
+
+    .grupo-header {
+      background: #f0f4ff;
+      border-bottom: 1px solid #dee2e6;
+      padding: 8px 14px;
+      font-size: .83rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .grupo-header.catser {
+      background: #f0fff4;
+    }
+
+    .grupo-media {
+      font-weight: 500;
+      color: #6c757d;
+    }
+
+    .ic-badge {
+      font-size: .68rem;
+      font-weight: 900;
+      border-radius: 999px;
+      padding: 2px 7px;
+    }
+
+    .ic-catmat {
+      background: #e8f0fe;
+      color: var(--azul);
+    }
+
+    .ic-catser {
+      background: #d1e7dd;
+      color: var(--verde);
+    }
+
+    .item-carrinho {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-bottom: 1px solid #f1f3f5;
+      font-size: .84rem;
+    }
+
+    .item-carrinho .info {
+      flex: 1;
+      min-width: 0;
+      color: #555;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-carrinho .preco {
+      color: #198754;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .btn-remover {
+      border: 0;
+      background: transparent;
+      color: #dc3545;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .info-label {
+      font-size: .75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: #667085;
+      margin-bottom: 2px;
+    }
+
+    .val-text {
+      margin-bottom: 12px;
+      color: #222;
+    }
+
+    .small-muted {
+      color: #6c757d;
+      font-size: .78rem;
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 10px; }
+      .main-card { padding: 18px; }
+      .tipo-selector { flex-direction: column; }
+      .barra-lote { align-items: flex-start; flex-direction: column; }
+      .barra-lote .acoes { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="main-card">
+    <div class="app-title">
+      <h1>Pesquisa de Preços CATMAT/CATSER</h1>
+      <p>Consulta pública à API de Dados Abertos do Compras.gov.br</p>
+    </div>
+
+    <div class="tipo-selector" id="tipoSelector">
+      <button class="tipo-btn ativo-catmat" id="btnCatmat" type="button" onclick="selecionarTipo('CATMAT')">
+        <i class="bi bi-box-seam me-1"></i> CATMAT — Materiais
+      </button>
+      <button class="tipo-btn" id="btnCatser" type="button" onclick="selecionarTipo('CATSER')">
+        <i class="bi bi-tools me-1"></i> CATSER — Serviços
+      </button>
+    </div>
+
+    <div class="text-center mb-3">
+      <a href="https://catalogo.compras.gov.br/cnbs-web/busca" target="_blank" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-search me-1"></i>
+        Consultar código no Catálogo de Materiais e Serviços
+        <i class="bi bi-box-arrow-up-right ms-1"></i>
+      </a>
+    </div>
+
+    <section class="row g-2 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label" id="labelCodigo">Código CATMAT</label>
+        <input type="number" id="codigo" class="form-control" placeholder="Ex.: 622451">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Data início</label>
+        <input type="date" id="dataInicio" class="form-control">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Data fim</label>
+        <input type="date" id="dataFim" class="form-control">
+      </div>
+      <div class="col-md-2 d-grid">
+        <button class="btn btn-primary" id="btnPesquisar" type="button" onclick="consultar()">
+          <i class="bi bi-search me-1"></i> Pesquisar
+        </button>
+      </div>
+    </section>
+
+    <p class="small-muted mt-2 mb-0">
+      <i class="bi bi-info-circle me-1"></i>
+      Datas em branco buscam os registros mais recentes disponíveis pela API.
+    </p>
+
+    <div class="loading-box" id="loadingBox" aria-live="polite">
+      <div class="spinner-border" id="loadingSpinner" role="status" aria-hidden="true"></div>
+      <div class="loading-text flex-grow-1">
+        <strong id="loadingTitle">Buscando dados...</strong>
+        <span id="loadingSubtitle">Consultando a API pública. Isso pode levar alguns segundos.</span>
+        <div class="progress-line"></div>
+      </div>
+    </div>
+
+    <div class="alert alert-warning text-center mt-3" id="errorMsg"></div>
+
+    <div class="action-row">
+      <div class="small-muted" id="txtResultadoCabecalho"></div>
+      <button class="btn btn-outline-danger btn-sm" type="button" onclick="toggleCarrinho()">
+        <i class="bi bi-cart3 me-1"></i> Carrinho <span class="carrinho-badge" id="badgeCarrinho">0</span>
+      </button>
+    </div>
+
+    <section id="painelCarrinho" class="card border-danger mb-3">
+      <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center gap-2 flex-wrap py-2">
+        <strong><i class="bi bi-cart3 me-1"></i> Carrinho de cotações</strong>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-light btn-sm" type="button" onclick="limparCarrinho()">Limpar tudo</button>
+          <button class="btn btn-warning btn-sm fw-bold" type="button" id="btnGerarCarrinho" onclick="gerarPDFCarrinho()">Gerar PDF multi-item</button>
+          <button class="btn btn-outline-light btn-sm" type="button" onclick="toggleCarrinho()">Fechar</button>
+        </div>
+      </div>
+      <div id="listaCarrinho" class="card-body p-0"></div>
+      <div class="card-footer small-muted py-2" id="rodapeCarrinho"></div>
+    </section>
+
+    <section id="results">
+      <div id="barraLote" class="barra-lote catmat">
+        <span><strong id="txtQtdSelecionados">0</strong> item(ns) selecionado(s)</span>
+        <div class="acoes">
+          <button class="btn btn-light btn-sm" type="button" onclick="limparSelecao()">Limpar seleção</button>
+          <button class="btn btn-outline-light btn-sm" type="button" onclick="adicionarAoCarrinho()">Adicionar ao carrinho</button>
+          <button class="btn btn-warning btn-sm fw-bold" type="button" id="btnGerarLote" onclick="gerarPDFLote()">Gerar PDF em lote</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle shadow-sm">
+          <thead class="table-dark">
+            <tr>
+              <th class="col-check"><input type="checkbox" id="checkTodos" title="Selecionar todos" onchange="toggleTodos(this.checked)"></th>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Unidade</th>
+              <th>Valor Unit.</th>
+              <th>Localidade</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="corpoTabela"></tbody>
+        </table>
+      </div>
+
+      <div id="resumoSelecionados" class="alert alert-info py-2 px-3 mt-2 mb-0">
+        <span id="resumoTexto"></span>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white" id="modalHeader">
+          <h5 class="modal-title">Detalhamento da compra pública</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body" id="conteudoModal"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="button" id="btnGerarPDF" class="btn btn-danger">Baixar relatório PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let modal;
+    let tipoAtual = 'CATMAT';
+    let dadosCarregados = [];
+    let itensSelecionados = new Set();
+    let carrinho = [];
+
+    window.addEventListener('load', iniciar);
+
+    function iniciar() {
+      modal = new bootstrap.Modal(document.getElementById('modalDetalhes'));
+      const hoje = new Date();
+      const umAno = new Date(hoje);
+      umAno.setFullYear(umAno.getFullYear() - 1);
+
+      document.getElementById('dataFim').value = toDateInput(hoje);
+      document.getElementById('dataInicio').value = toDateInput(umAno);
+      document.getElementById('codigo').addEventListener('keydown', evt => {
+        if (evt.key === 'Enter') consultar();
+      });
+
+      aplicarTema();
+      renderCarrinho();
+    }
+
+    function selecionarTipo(tipo) {
+      tipoAtual = tipo;
+      dadosCarregados = [];
+      itensSelecionados.clear();
+      document.getElementById('codigo').value = '';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('errorMsg').style.display = 'none';
+      document.getElementById('txtResultadoCabecalho').textContent = '';
+      aplicarTema();
+      atualizarBarraLote();
+    }
+
+    function aplicarTema() {
+      const catser = tipoAtual === 'CATSER';
+      document.getElementById('tipoSelector').className = `tipo-selector ${catser ? 'catser' : ''}`;
+      document.getElementById('btnCatmat').className = `tipo-btn ${catser ? '' : 'ativo-catmat'}`;
+      document.getElementById('btnCatser').className = `tipo-btn ${catser ? 'ativo-catser' : ''}`;
+      document.getElementById('labelCodigo').textContent = `Código ${tipoAtual}`;
+      document.getElementById('btnPesquisar').className = `btn ${catser ? 'btn-success' : 'btn-primary'}`;
+      document.getElementById('loadingSpinner').className = `spinner-border ${catser ? 'text-success' : 'text-primary'}`;
+      document.getElementById('loadingBox').className = `loading-box ${catser ? 'catser' : ''}`;
+      document.getElementById('loadingTitle').textContent = `Buscando dados de ${catser ? 'serviços' : 'materiais'}...`;
+      document.getElementById('modalHeader').className = `modal-header ${catser ? 'bg-success' : 'bg-primary'} text-white`;
+      document.getElementById('barraLote').className = `barra-lote ${catser ? 'catser' : 'catmat'}`;
+    }
+
+    function consultar() {
+      const codigo = document.getElementById('codigo').value.trim();
+      if (!codigo) {
+        alert(`Digite um código ${tipoAtual}.`);
+        return;
+      }
+
+      const dataInicio = document.getElementById('dataInicio').value || null;
+      const dataFim = document.getElementById('dataFim').value || null;
+      const funcao = tipoAtual === 'CATSER' ? 'buscarPrecosServico' : 'buscarPrecosMaterial';
+
+      setCarregando(true);
+      dadosCarregados = [];
+      itensSelecionados.clear();
+      atualizarBarraLote();
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('errorMsg').style.display = 'none';
+      document.getElementById('txtResultadoCabecalho').textContent = '';
+      document.getElementById('checkTodos').checked = false;
+
+      google.script.run
+        .withSuccessHandler(onSucessoConsulta)
+        .withFailureHandler(onErroConsulta)
+        [funcao](codigo, dataInicio, dataFim);
+    }
+
+    function onSucessoConsulta(data) {
+      setCarregando(false);
+
+      if (!Array.isArray(data) || data.length === 0) {
+        mostrarErro('Nenhum registro encontrado para este código e período.');
+        return;
+      }
+
+      dadosCarregados = data.map(item => ({
+        ...item,
+        siglaUnidadeMedida: unidade(item.siglaUnidadeMedida),
+        _tipo: item._tipo || tipoAtual
+      }));
+
+      renderTabela();
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('txtResultadoCabecalho').textContent = `${dadosCarregados.length} referência(s) encontrada(s).`;
+    }
+
+    function onErroConsulta(erro) {
+      setCarregando(false);
+      mostrarErro(erro && erro.message ? erro.message : 'Erro ao buscar dados. Tente novamente.');
+    }
+
+    function renderTabela() {
+      const tbody = document.getElementById('corpoTabela');
+      const catser = tipoAtual === 'CATSER';
+      tbody.innerHTML = '';
+
+      dadosCarregados.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        tr.id = `row-${index}`;
+        tr.innerHTML = `
+          <td class="col-check">
+            <input type="checkbox" class="check-item" data-index="${index}" onchange="toggleItem(${index}, this.checked)">
+          </td>
+          <td>${dataBR(item.dataCompra)}</td>
+          <td><small>${textoCurto(item.descricaoItem, 76)}</small></td>
+          <td>${escapeHtml(unidade(item.siglaUnidadeMedida))}</td>
+          <td class="fw-bold text-success">${moeda(item.precoUnitario)}</td>
+          <td><small>${escapeHtml(str(item.municipio))}/${escapeHtml(str(item.estado))}</small></td>
+          <td>
+            <button class="btn btn-sm ${catser ? 'btn-outline-success' : 'btn-outline-primary'}" type="button">Ver detalhes</button>
+          </td>`;
+
+        tr.querySelector('button').addEventListener('click', () => abrirDetalhes(item));
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toggleItem(index, checked) {
+      const row = document.getElementById(`row-${index}`);
+      if (checked) {
+        itensSelecionados.add(index);
+        row.classList.add('selecionada');
+      } else {
+        itensSelecionados.delete(index);
+        row.classList.remove('selecionada');
+        document.getElementById('checkTodos').checked = false;
+      }
+      atualizarBarraLote();
+    }
+
+    function toggleTodos(checked) {
+      document.querySelectorAll('.check-item').forEach(cb => {
+        const index = Number(cb.dataset.index);
+        cb.checked = checked;
+        const row = document.getElementById(`row-${index}`);
+        if (checked) {
+          itensSelecionados.add(index);
+          row.classList.add('selecionada');
+        } else {
+          itensSelecionados.delete(index);
+          row.classList.remove('selecionada');
+        }
+      });
+      atualizarBarraLote();
+    }
+
+    function limparSelecao() {
+      itensSelecionados.clear();
+      document.querySelectorAll('.check-item').forEach(cb => cb.checked = false);
+      document.querySelectorAll('tr.selecionada').forEach(row => row.classList.remove('selecionada'));
+      document.getElementById('checkTodos').checked = false;
+      atualizarBarraLote();
+    }
+
+    function atualizarBarraLote() {
+      const qtd = itensSelecionados.size;
+      const barra = document.getElementById('barraLote');
+      const resumo = document.getElementById('resumoSelecionados');
+
+      document.getElementById('txtQtdSelecionados').textContent = qtd;
+
+      if (!qtd) {
+        barra.style.display = 'none';
+        resumo.style.display = 'none';
+        return;
+      }
+
+      const precos = Array.from(itensSelecionados).map(i => numero(dadosCarregados[i].precoUnitario));
+      const media = precos.reduce((a, b) => a + b, 0) / precos.length;
+      barra.style.display = 'flex';
+      resumo.style.display = 'block';
+      document.getElementById('resumoTexto').innerHTML = `<strong>${qtd} item(ns)</strong> &nbsp;|&nbsp; Média: <strong>${moeda(media)}</strong> &nbsp;|&nbsp; Menor: ${moeda(Math.min(...precos))} &nbsp;|&nbsp; Maior: ${moeda(Math.max(...precos))}`;
+    }
+
+    function toggleCarrinho() {
+      const painel = document.getElementById('painelCarrinho');
+      painel.style.display = painel.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function adicionarAoCarrinho() {
+      if (!itensSelecionados.size) {
+        alert('Selecione ao menos um item.');
+        return;
+      }
+
+      let adicionados = 0;
+      Array.from(itensSelecionados).forEach(index => {
+        const item = { ...dadosCarregados[index], _tipo: tipoAtual };
+        const id = chaveItem(item);
+        const existe = carrinho.some(c => chaveItem(c) === id);
+        if (!existe) {
+          carrinho.push(item);
+          adicionados++;
+        }
+      });
+
+      renderCarrinho();
+
+      if (adicionados) {
+        limparSelecao();
+        document.getElementById('painelCarrinho').style.display = 'block';
+      } else {
+        alert('Os itens selecionados já estão no carrinho.');
+      }
+    }
+
+    function removerDoCarrinho(index) {
+      carrinho.splice(index, 1);
+      renderCarrinho();
+    }
+
+    function limparCarrinho() {
+      if (!carrinho.length) return;
+      if (!confirm('Limpar todos os itens do carrinho?')) return;
+      carrinho = [];
+      renderCarrinho();
+    }
+
+    function renderCarrinho() {
+      const lista = document.getElementById('listaCarrinho');
+      const rodape = document.getElementById('rodapeCarrinho');
+      document.getElementById('badgeCarrinho').textContent = carrinho.length;
+
+      if (!carrinho.length) {
+        lista.innerHTML = `
+          <div class="text-center text-muted py-4" style="font-size:.9rem">
+            Nenhum item no carrinho ainda.<br>
+            Selecione itens na tabela e use <strong>Adicionar ao carrinho</strong>.
+          </div>`;
+        rodape.textContent = '';
+        return;
+      }
+
+      const grupos = {};
+      const ordem = [];
+
+      carrinho.forEach((item, idx) => {
+        const chave = `${item._tipo}_${item.codigoItemCatalogo}`;
+        if (!grupos[chave]) {
+          grupos[chave] = {
+            tipo: item._tipo,
+            codigo: item.codigoItemCatalogo,
+            descricao: item.descricaoItem,
+            linhas: []
+          };
+          ordem.push(chave);
+        }
+        grupos[chave].linhas.push({ item, idx });
+      });
+
+      let html = '';
+      ordem.forEach(chave => {
+        const grupo = grupos[chave];
+        const catser = grupo.tipo === 'CATSER';
+        const precos = grupo.linhas.map(x => numero(x.item.precoUnitario));
+        const media = precos.reduce((a, b) => a + b, 0) / precos.length;
+
+        html += `
+          <div class="grupo-header ${catser ? 'catser' : ''}">
+            <span class="ic-badge ${catser ? 'ic-catser' : 'ic-catmat'}">${grupo.tipo}</span>
+            <span>Código <strong>${escapeHtml(grupo.codigo || 'N/D')}</strong> — ${textoCurto(grupo.descricao, 58)}</span>
+            <span class="grupo-media">${grupo.linhas.length} cotação(ões) · Média: ${moeda(media)}</span>
+          </div>`;
+
+        grupo.linhas.forEach(({ item, idx }) => {
+          html += `
+            <div class="item-carrinho">
+              <span class="info">${dataBR(item.dataCompra)} · ${textoCurto(item.nomeFornecedor, 46)} · ${escapeHtml(str(item.municipio))}/${escapeHtml(str(item.estado))}</span>
+              <span class="preco">${moeda(item.precoUnitario)}</span>
+              <button class="btn-remover" type="button" onclick="removerDoCarrinho(${idx})" title="Remover">×</button>
+            </div>`;
+        });
+      });
+
+      lista.innerHTML = html;
+      rodape.textContent = `${carrinho.length} cotação(ões) de ${ordem.length} código(s) diferente(s).`;
+    }
+
+    function abrirDetalhes(item) {
+      const catser = item._tipo === 'CATSER' || tipoAtual === 'CATSER';
+      const preco = numero(item.precoUnitario);
+      const quantidade = numero(item.quantidade);
+      const total = preco * quantidade;
+      const un = unidade(item.siglaUnidadeMedida);
+      const linkPncp = `https://pncp.gov.br/app/editais?q=${encodeURIComponent(item.idCompra || '')}&pagina=1&status=todos`;
+
+      const linhaMarca = catser ? '' : `
+        <div class="col-md-4">
+          <p class="info-label">Marca</p>
+          <p class="val-text">${escapeHtml(str(item.marca))}</p>
+        </div>`;
+
+      document.getElementById('conteudoModal').innerHTML = `
+        <div class="row">
+          <div class="col-12">
+            <p class="info-label">Descrição do ${catser ? 'serviço' : 'item'}</p>
+            <p class="val-text p-2 bg-light border rounded">${escapeHtml(str(item.descricaoItem))}</p>
+          </div>
+          <div class="col-md-4">
+            <p class="info-label">Valor unitário</p>
+            <p class="val-text fw-bold fs-5 text-success">${moeda(preco)}</p>
+          </div>
+          <div class="col-md-4">
+            <p class="info-label">Quantidade</p>
+            <p class="val-text">${quantidade || 'N/D'} ${escapeHtml(un)}</p>
+          </div>
+          <div class="col-md-4">
+            <p class="info-label">Valor total</p>
+            <p class="val-text fw-bold text-success">${moeda(total)}</p>
+          </div>
+          <hr>
+          <div class="col-md-6">
+            <p class="info-label">Órgão</p>
+            <p class="val-text small">${escapeHtml(str(item.nomeOrgao))}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="info-label">Modalidade</p>
+            <p class="val-text">${escapeHtml(traduzirModalidade(item.modalidade))}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="info-label">Fornecedor</p>
+            <p class="val-text small">${escapeHtml(str(item.nomeFornecedor))}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="info-label">CNPJ/CPF</p>
+            <p class="val-text">${escapeHtml(str(item.niFornecedor))}</p>
+          </div>
+          ${linhaMarca}
+          <div class="col-md-4">
+            <p class="info-label">Unidade</p>
+            <p class="val-text">${escapeHtml(un)}</p>
+          </div>
+          <div class="col-md-4">
+            <p class="info-label">Data da compra</p>
+            <p class="val-text">${dataBR(item.dataCompra)}</p>
+          </div>
+          <div class="col-md-4">
+            <p class="info-label">Localização</p>
+            <p class="val-text">${escapeHtml(str(item.municipio))} / ${escapeHtml(str(item.estado))}</p>
+          </div>
+          <div class="col-12 mt-1">
+            <p class="info-label">Link para pesquisa do edital no PNCP</p>
+            <a href="${linkPncp}" target="_blank" class="btn btn-sm btn-outline-secondary w-100 text-start text-truncate">
+              <i class="bi bi-box-arrow-up-right me-1"></i>${linkPncp}
+            </a>
+          </div>
+        </div>`;
+
+      document.getElementById('modalHeader').className = `modal-header ${catser ? 'bg-success' : 'bg-primary'} text-white`;
+      document.getElementById('btnGerarPDF').onclick = () => baixarPDF(item);
+      modal.show();
+    }
+
+    function baixarPDF(item) {
+      const btn = document.getElementById('btnGerarPDF');
+      setBotaoCarregando(btn, true, 'Gerando...');
+      google.script.run
+        .withSuccessHandler(dados => {
+          setBotaoCarregando(btn, false, 'Baixar relatório PDF');
+          baixarArquivo(dados);
+        })
+        .withFailureHandler(erro => {
+          setBotaoCarregando(btn, false, 'Baixar relatório PDF');
+          alert(erro && erro.message ? erro.message : 'Erro ao gerar PDF.');
+        })
+        .gerarPDF(item, item._tipo || tipoAtual);
+    }
+
+    function gerarPDFLote() {
+      if (!itensSelecionados.size) {
+        alert('Selecione ao menos um item.');
+        return;
+      }
+
+      const btn = document.getElementById('btnGerarLote');
+      const itens = Array.from(itensSelecionados).map(i => dadosCarregados[i]);
+      setBotaoCarregando(btn, true, 'Gerando...');
+
+      google.script.run
+        .withSuccessHandler(dados => {
+          setBotaoCarregando(btn, false, 'Gerar PDF em lote');
+          if (dados.error) return alert(dados.error);
+          baixarArquivo(dados);
+        })
+        .withFailureHandler(erro => {
+          setBotaoCarregando(btn, false, 'Gerar PDF em lote');
+          alert(erro && erro.message ? erro.message : 'Erro ao gerar PDF.');
+        })
+        .gerarPDFLote(itens, tipoAtual);
+    }
+
+    function gerarPDFCarrinho() {
+      if (!carrinho.length) {
+        alert('O carrinho está vazio.');
+        return;
+      }
+
+      const btn = document.getElementById('btnGerarCarrinho');
+      setBotaoCarregando(btn, true, 'Gerando...');
+
+      google.script.run
+        .withSuccessHandler(dados => {
+          setBotaoCarregando(btn, false, 'Gerar PDF multi-item');
+          if (dados.error) return alert(dados.error);
+          baixarArquivo(dados);
+        })
+        .withFailureHandler(erro => {
+          setBotaoCarregando(btn, false, 'Gerar PDF multi-item');
+          alert(erro && erro.message ? erro.message : 'Erro ao gerar PDF.');
+        })
+        .gerarPDFCarrinho(carrinho);
+    }
+
+    function setCarregando(ativo) {
+      const box = document.getElementById('loadingBox');
+      const btn = document.getElementById('btnPesquisar');
+      box.classList.toggle('show', ativo);
+      btn.disabled = ativo;
+      btn.innerHTML = ativo
+        ? '<span class="spinner-border spinner-border-sm me-1"></span> Buscando'
+        : '<i class="bi bi-search me-1"></i> Pesquisar';
+    }
+
+    function setBotaoCarregando(btn, ativo, texto) {
+      btn.disabled = ativo;
+      btn.innerHTML = ativo
+        ? '<span class="spinner-border spinner-border-sm me-1"></span> ' + texto
+        : texto;
+    }
+
+    function mostrarErro(mensagem) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = mensagem;
+      el.style.display = 'block';
+    }
+
+    function baixarArquivo(dados) {
+      if (!dados || !dados.bytes) {
+        alert('Arquivo não retornado pelo servidor.');
+        return;
+      }
+
+      const binario = atob(dados.bytes);
+      const bytes = new Uint8Array(binario.length);
+      for (let i = 0; i < binario.length; i++) {
+        bytes[i] = binario.charCodeAt(i);
+      }
+
+      const blob = new Blob([bytes], { type: dados.mimeType || 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = dados.fileName || 'relatorio.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function chaveItem(item) {
+      return [item._tipo, item.idCompra, item.codigoItemCatalogo, item.idItemCompra, item.numeroItemCompra, item.precoUnitario].join('|');
+    }
+
+    function unidade(valor) {
+      const texto = String(valor || '').trim();
+      if (!texto || texto === '-' || texto.toUpperCase() === 'N/D' || texto.toUpperCase() === 'ND') return 'un';
+      return texto;
+    }
+
+    function str(valor) {
+      return valor === null || valor === undefined || valor === '' ? 'N/D' : valor;
+    }
+
+    function numero(valor) {
+      const n = Number(String(valor ?? 0).replace(',', '.'));
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function moeda(valor) {
+      return numero(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function dataBR(valor) {
+      if (!valor) return 'N/D';
+      const data = new Date(valor);
+      if (Number.isNaN(data.getTime())) return 'N/D';
+      return data.toLocaleDateString('pt-BR');
+    }
+
+    function toDateInput(data) {
+      const ano = data.getFullYear();
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const dia = String(data.getDate()).padStart(2, '0');
+      return `${ano}-${mes}-${dia}`;
+    }
+
+    function textoCurto(valor, limite) {
+      const texto = escapeHtml(str(valor));
+      return texto.length > limite ? texto.slice(0, limite) + '…' : texto;
+    }
+
+    function escapeHtml(valor) {
+      return String(valor ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function traduzirModalidade(codigo) {
+      const mapa = {
+        '01': 'CONVITE',
+        '02': 'TOMADA DE PREÇOS',
+        '03': 'CONCORRÊNCIA',
+        '04': 'CONCORRÊNCIA INTERNACIONAL',
+        '05': 'PREGÃO',
+        '06': 'DISPENSA DE LICITAÇÃO',
+        '07': 'INEXIGIBILIDADE DE LICITAÇÃO',
+        '12': 'CREDENCIAMENTO',
+        '20': 'CONCURSO',
+        '22': 'TOMADA DE PREÇOS POR TÉCNICA E PREÇO',
+        '33': 'CONCORRÊNCIA POR TÉCNICA E PREÇO',
+        '44': 'CONCORRÊNCIA INTERNACIONAL POR TÉCNICA E PREÇO',
+        '57': 'CONVÊNIO'
+      };
+      if (!codigo) return 'N/D';
+      return mapa[String(codigo).padStart(2, '0')] || `Código ${codigo}`;
+    }
+  </script>
+</body>
+</html>

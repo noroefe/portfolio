@@ -1,113 +1,136 @@
-# Portfólio de Tecnologia e Dados
+# Pesquisa de Preços CATMAT/CATSER
 
-![Author](https://img.shields.io/badge/author-Fernando%20Schwartzhaupt%20Noroefé-blue)
+Aplicação web independente em **Google Apps Script** para consulta de preços públicos na API de Dados Abertos do Compras.gov.br. A aplicação consulta códigos **CATMAT** e **CATSER**, exibe os registros encontrados, permite selecionar referências, montar um carrinho de cotações e gerar relatórios em PDF.
 
-Aqui, compartilho alguns dos meus projetos que envolvem tecnologia, BI e visualização de dados
+## Visão geral
 
-## Projetos
+Este projeto foi estruturado como um **script independente**. Ele não precisa estar vinculado a Google Sheets, Google Docs, Forms ou qualquer outro arquivo do Google Workspace. A tela é publicada como aplicativo da Web pelo próprio Apps Script. As chamadas à API do Compras.gov.br são feitas pelo servidor do Apps Script, usando `UrlFetchApp`.
 
-###  📊 Dashboard de Vendas Anuais
+## Funcionalidades
 
-Dashboard de vendas anuais criado no Power BI em 2021 durante um treinamento da Data Science Academy.
+- Consulta de preços por código CATMAT.
+- Consulta de preços por código CATSER.
+- Filtro por data inicial e data final.
+- Tabela de resultados com data, descrição, unidade, valor unitário e localidade.
+- Modal de detalhamento da compra pública.
+- Seleção de múltiplas referências.
+- Carrinho com referências de vários códigos.
+- Relatório PDF individual.
+- Relatório PDF em lote para um código.
+- Relatório PDF multi-item a partir do carrinho.
 
-| **Descrição**                              | **Detalhes**                               |
-|--------------------------------------------|--------------------------------------------|
-| **Nome do Dashboard**                      | Dashboard de Vendas Anuais                 |
-| **Ferramenta Utilizada**                   | ![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?logo=power-bi&logoColor=black)|
-| **Ano de Criação**                         | 2021                                       |
-| **Objetivo**                               | Análise das Vendas Anuais                  |
-| **Principais Funcionalidades**             | Visualizações Interativas                  |
-| **Visualização**                           | [LINK](https://github.com/noroefe/portfolio/blob/main/Dashboard%20de%20Vendas%20-%201/EstudoCaso1.pdf)  |
+## Estrutura do projeto
 
-###  📊 Dashboard de Vendas Detalhado
+```text
+.
+├── Code.gs
+├── Index.html
+├── appsscript.json
+├── README.md
+├── LICENSE
+```
 
-Dashboard de vendas criado no Power BI em 2021 durante um treinamento da Data Science Academy.
+## Implantação manual
 
-| **Descrição**                              | **Detalhes**                               |
-|--------------------------------------------|--------------------------------------------|
-| **Nome do Dashboard**                      | Dashboard de Vendas Detalhado              |
-| **Ferramenta Utilizada**                   | ![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?logo=power-bi&logoColor=black)|
-| **Ano de Criação**                         | 2021                                       |
-| **Objetivo**                               | Análise das Vendas Detalhado               |
-| **Principais Funcionalidades**             | Visualizações Interativas                  |
-| **Visualização**                           | [LINK](https://github.com/noroefe/portfolio/blob/main/Dashboard%20de%20Vendas%20-%202/EstudoCaso2.pdf)|
+### 1. Criar um projeto independente
 
-###  ⚙️ SGPPE - Sistema de Gerenciamento de Projetos para Pequenas Empresas
+1. Acesse o Google Apps Script.
+2. Clique em **Novo projeto**.
+3. Renomeie o projeto para algo como `Pesquisa de Preços CATMAT CATSER`.
 
-Desenvolvido durante meu Trabalho de Conclusão de Curso, consistiu na modelagem e construção de um software destinado ao gerenciamento de projetos em pequenas empresas.
+### 2. Adicionar os arquivos
 
-| **Descrição**                              | **Detalhes**                               |
-|--------------------------------------------|--------------------------------------------|
-| **Nome do Projeto**                        | Sistema SGPPE                              |
-| **Ferramentas Utilizadas**                 | [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Node.js](https://img.shields.io/badge/Node.js-v12.18.3-green.svg)](https://nodejs.org/) [![MySQL](https://img.shields.io/badge/SQL-MySQL-blue.svg)](https://www.mysql.com/) [![HTML](https://img.shields.io/badge/HTML-5-orange.svg)](https://developer.mozilla.org/en-US/docs/Web/HTML)|
-| **Ano de Criação**                         | 2023 - 2024                                |
-| **Objetivo**                               | Resposta às dificuldades enfrentadas por pequenos negócios na gestão de projetos. |
-| **Principais Funcionalidades**             | Gestão de Projetos e Tarefas               |
-| **Acessar README**                         | [LINK](https://github.com/noroefe/portfolio/blob/main/sistema_sgppe/README.md)|
-| **Licença**                                | Copyright (c) 2024 Fernando Schwartzhaupt Noroefé |
+1. Substitua o conteúdo do arquivo `Code.gs` pelo conteúdo deste repositório.
+2. Crie um arquivo HTML chamado `Index`.
+3. Cole nele o conteúdo de `Index.html`.
 
-###  🎮 Visualização de Dados  Jogos Populares 1980 - 2023 
+### 3. Autorizar o script
 
-Dashboard experimental para análise com dados de jogos populares.
+Antes de publicar, execute uma função simples pelo editor, por exemplo:
 
-| **Descrição**                | **Detalhes**                                                                                                                                                |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Nome**                     | Jogos Populares 1980 - 2023                                                                                                                                 |
-| **Ferramentas Utilizadas**   |![Excel](https://img.shields.io/badge/Excel-217346?logo=microsoft-excel&logoColor=white) ![Looker Studio](https://img.shields.io/badge/Google-Looker%20Studio-4285F4?logo=googlestudio\&logoColor=white)                                             |
-| **Ano de Criação**           | 2024                                                                                                                                                        |
-| **Objetivo**                 | Análise exploratória com dados de jogos populares entre os anos de 1980 e 2023                                                                              |
-| **Dados**                    | [Dataset Kaggle – Popular Video Games 1980-2023](https://www.kaggle.com/datasets/arnabchaki/popular-video-games-1980-2023/data) (Fonte original: Backloggd) |
-| **Dashboard com Resultados** | [Relatório Google Looker](https://lookerstudio.google.com/reporting/b0b636d6-60ff-4365-bfa9-98a503241771)                                                   |
+```javascript
+obterConfiguracao
+```
+
+O Google deve solicitar autorização. A autorização é necessária porque o script usa `UrlFetchApp` para consultar uma URL externa.
+
+## Publicação como aplicativo da Web
+
+Na implantação usada neste projeto, a configuração recomendada é:
+
+- **Tipo de implantação:** Aplicativo da Web.
+- **Executar como:** Usuário com acesso ao app.
+- **Quem pode acessar:** Qualquer pessoa com uma Conta Google.
+
+Passo a passo:
+
+1. Clique em **Implantar**.
+2. Escolha **Nova implantação**.
+3. No ícone de engrenagem, selecione **Aplicativo da Web**.
+4. Em **Executar como**, selecione **Usuário com acesso ao app**.
+5. Em **Quem pode acessar**, selecione **Qualquer pessoa com uma Conta Google**.
+6. Clique em **Implantar**.
+7. Copie a URL terminada em `/exec`.
+8. Compartilhe essa URL com os usuários.
+
+Use sempre a URL pública terminada em `/exec`. Evite compartilhar a URL de teste terminada em `/dev`.
+
+## Como os usuários acessam
+
+O usuário final não precisa instalar nada.
+
+1. Receba ou abra a URL pública da aplicação.
+2. Faça login com uma Conta Google, quando solicitado.
+3. No primeiro acesso, o Google pode solicitar autorização para executar o aplicativo.
+4. Depois da autorização, a tela de pesquisa será aberta normalmente.
+5. Informe o código CATMAT ou CATSER, ajuste o período e clique em **Pesquisar**.
+6. Use **Ver detalhes**, seleção em lote, carrinho e geração de PDF conforme necessário.
+
+Quando a aplicação é configurada para executar como **usuário com acesso ao app**, cada usuário executa o script com a própria Conta Google. Esse modelo é adequado quando se deseja disponibilizar a ferramenta para usuários autenticados, sem vincular a aplicação a uma planilha, documento ou formulário específico.
+
+## Atualização de versão
+
+Sempre que alterar o código:
+
+1. Clique em **Implantar**.
+2. Acesse **Gerenciar implantações**.
+3. Edite a implantação existente.
+4. Escolha **Nova versão**.
+5. Salve.
+
+A URL `/exec` pode continuar a mesma, desde que a implantação existente seja atualizada.
+
+## Origem dos dados e uso responsável
+
+Os dados exibidos são obtidos da API pública de Dados Abertos do Compras.gov.br.
+
+Esta aplicação apenas consulta, organiza e apresenta informações retornadas por essa fonte pública. O projeto não produz, audita, corrige ou certifica os dados apresentados.
+
+Os resultados devem ser tratados como **referência preliminar de pesquisa**, e não como conclusão automática de preço, justificativa administrativa definitiva ou parecer técnico.
+
+Antes de qualquer decisão formal, recomenda-se validação criteriosa dos registros utilizados, incluindo descrição do item ou serviço, unidade de medida, quantidade, data da compra, localidade, modalidade, fornecedor, compatibilidade técnica e pertinência da amostra.
+
+O uso da aplicação, dos dados consultados e dos relatórios gerados é de responsabilidade de quem utiliza, adapta ou implanta a ferramenta.
+
+## Limitações conhecidas
+
+- A aplicação depende da disponibilidade da API pública do Compras.gov.br.
+- A API pode alterar nomes de campos, formato de resposta ou regras de consulta.
+- O relatório em PDF reflete os dados retornados no momento da consulta.
+- A média de valores não substitui análise técnica, saneamento de amostra ou justificativa formal de preço.
+- O carrinho permite consolidar itens diferentes, mas médias gerais de itens de naturezas distintas devem ser interpretadas com cuidado.
+
+## Segurança, privacidade e responsabilidade de uso
+
+- A aplicação não grava dados em planilhas.
+- A aplicação não usa banco de dados.
+- A aplicação não armazena histórico de consultas.
+- As consultas são feitas em tempo real à API pública de Dados Abertos do Compras.gov.br.
+- Os relatórios gerados refletem os dados disponíveis no momento da consulta.
+- Cada pessoa ou organização que implantar, modificar ou utilizar esta aplicação é responsável por validar os resultados e adequar o uso às suas próprias normas, procedimentos e necessidades.
+- Este projeto é fornecido como ferramenta auxiliar, sem garantia de disponibilidade, exatidão, atualização contínua, adequação legal, administrativa ou técnica para qualquer finalidade específica.
 
 
-###  🔍 Análise Exploratória Infrações de Trânsito em Viamão no 1º Trimestre 2024
+## Licença
 
-Análise básica das infrações de trânsito de Viamão no período, além de uma visualização no Tableau.
-
-| **Descrição**                              | **Detalhes**                               |
-|--------------------------------------------|--------------------------------------------|
-| **Nome**                                   | Análise Exploratória Infrações de Trânsito em Viamão no 1º Trimestre 2024|
-| **Ferramentas Utilizadas**                 | ![Excel](https://img.shields.io/badge/Excel-217346?logo=microsoft-excel&logoColor=white) [![Jupyter Notebook](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org/) ![Tableau](https://img.shields.io/badge/Tableau-E97627?logo=tableau&logoColor=white) ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)       |
-| **Ano de Criação**                         | 2024                                       |
-| **Objetivo**                               | Gerar uma visualização com as infrações mais cometidas no município de Viamão no 1º Trimestre em 2024 e um comparativo com a média do restante do estado|
-| **Análise**                                | [Acessar Análise](https://github.com/noroefe/portfolio/blob/56b5962f2468e8ed37aa16dc2b5db4804a0eaf2d/analise_infracoes_viamao_1t_2024/%20An%C3%A1lise%20Infra%C3%A7%C3%B5es%20de%20Tr%C3%A2nsito%20em%20Viam%C3%A3o%20no%201%C2%BA%20Trimestre%202024.ipynb)|
-| **Dashboard com Resultados**               | [Acessar Dashboard](https://public.tableau.com/app/profile/fernando.schwartzhaupt.noroef./viz/Dashboard-Viamo-1T-2024/Dashboard)|
-
-###  🕵️ Visualização - Crimes 2024 - Rio Grande do Sul
-
-Visualização para análise exploratória com dados sobre crimes cometidos no estado do Rio Grande do Sul em 2024.
-
-| **Descrição**                              | **Detalhes**                               |
-|--------------------------------------------|--------------------------------------------|
-| **Nome**                                   |  Crimes 2024 - Rio Grande do Sul|
-| **Ferramentas Utilizadas**                 | ![Excel](https://img.shields.io/badge/Excel-217346?logo=microsoft-excel&logoColor=white) ![Tableau](https://img.shields.io/badge/Tableau-E97627?logo=tableau&logoColor=white)        |
-| **Ano de Criação**                         | 2025                                       |
-| **Objetivo**                               | Visualização para análise exploratória com dados sobre crimes cometidos no estado do Rio Grande do Sul em 2024.|
-| **Dados**                                |  RIO GRANDE DO SUL. Dados Abertos (Lei nº 15.610/2021). Secretaria de Segurança Pública, [2025]. Disponível em: https://www.ssp.rs.gov.br/dados-abertos. |
-| **Dashboard com Resultados**               | [Acessar Visualização](https://public.tableau.com/app/profile/noroefe/viz/crimes_2024_rs/Crimes2024)|
-
-### 🛡️ Diário de Campanha - Sistema de Missões Pessoais
-
-Desenvolvido para transformar a gestão de rotina em uma jornada épica, este sistema integra produtividade, finanças e metas pessoais através de uma interface gamificada e moderna, utilizando o ecossistema Google.
-
-| **Descrição** | **Detalhes** |
-|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Nome do Projeto** | Diário de Campanha |
-| **Ferramentas Utilizadas** | [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Google Apps Script](https://img.shields.io/badge/Apps%20Script-4285F4?style=flat&logo=google-apps-script&logoColor=white)](https://developers.google.com/apps-script) [![Google Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?style=flat&logo=google-sheets&logoColor=white)](https://www.google.com/sheets/about/) [![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)](https://getbootstrap.com/) |
-| **Ano de Criação** | 2025 |
-| **Objetivo** | Gamificação da rotina pessoal e centralização de métricas de progresso (financeiro, intelectual e produtividade). |
-| **Principais Funcionalidades** | Gestão de Obrigações e Missões, Sincronização automática com Google Agenda e Dashboard de métricas com Chart.js. |
-| **Acessar README** | [LINK](https://github.com/noroefe/portfolio/blob/main/diarioCampanha/README.md) |
-
-### 💰 Mini-Sistema Fluxo de Caixa
-
-Desenvolvido para oferecer controle simples sobre a saúde financeira de pequenos negócios, permitindo o gerenciamento de lançamentos e contas.
-
-| **Descrição** | **Detalhes** |
-|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Nome do Projeto** | Mini-Sistema Fluxo de Caixa |
-| **Ferramentas Utilizadas** | [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Google Apps Script](https://img.shields.io/badge/Apps%20Script-4285F4?style=flat&logo=google-apps-script&logoColor=white)](https://developers.google.com/apps-script) [![Google Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?style=flat&logo=google-sheets&logoColor=white)](https://www.google.com/sheets/about/) [![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)](https://getbootstrap.com/) |
-| **Ano de Criação** | 2026 |
-| **Objetivo** | Centralização de fluxo de caixa com suporte a múltiplos regimes contábeis e automação de lançamentos via gestão de contas a pagar/receber. |
-| **Principais Funcionalidades** | Alternância dinâmica entre Regime de Caixa/Competência, Baixa automática de duplicatas com geração de lançamentos e Dashboard de métricas financeiras (Necessidade de Capital e Ciclo Financeiro). |
-| **Acessar README** | [LINK](https://github.com/noroefe/portfolio/blob/main/mini_sistema_fluxo_caixa/README.md) |
+Este projeto é distribuído sob licença MIT.

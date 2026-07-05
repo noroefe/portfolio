@@ -127,6 +127,5 @@ Aplicação web independente para consulta de preços públicos por códigos CAT
 | **Licença** | MIT |
 | **Acessar Projeto** | [LINK](https://github.com/noroefe/portfolio/tree/main/pesquisa_precos_API_GOV) |
 | **Demonstração** | [LINK](https://script.google.com/macros/s/AKfycbyVYYJZ2PmFPCKkCGpbwqY5OyjtxknEgvIuEe6xjxTvEnNvQzCqF8rCO2rXvmNAjFIi/exec) |
-| **Acessar README** | [LINK](https://github.com/noroefe/portfolio/blob/main/pesquisa_precos_API_GOV/README.md) |
 
 

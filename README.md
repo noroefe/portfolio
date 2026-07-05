@@ -111,3 +111,22 @@ Desenvolvido para oferecer controle simples sobre a saúde financeira de pequeno
 | **Objetivo** | Centralização de fluxo de caixa com suporte a múltiplos regimes contábeis e automação de lançamentos via gestão de contas a pagar/receber. |
 | **Principais Funcionalidades** | Alternância dinâmica entre Regime de Caixa/Competência, Baixa automática de duplicatas com geração de lançamentos e Dashboard de métricas financeiras (Necessidade de Capital e Ciclo Financeiro). |
 | **Acessar README** | [LINK](https://github.com/noroefe/portfolio/blob/main/mini_sistema_fluxo_caixa/README.md) |
+
+### 🔎 Pesquisa de Preços CATMAT/CATSER — API Compras.gov.br
+
+Aplicação web independente para consulta de preços públicos por códigos CATMAT e CATSER, utilizando a API de Dados Abertos do Compras.gov.br. O sistema permite pesquisar referências, visualizar detalhes da compra pública, selecionar cotações, montar carrinho multi-item e gerar relatórios em PDF para apoio à pesquisa preliminar de preços.
+
+| **Descrição** | **Detalhes** |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Nome do Projeto** | Pesquisa de Preços CATMAT/CATSER — API Compras.gov.br |
+| **Ferramentas Utilizadas** | [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![Google Apps Script](https://img.shields.io/badge/Apps%20Script-4285F4?style=flat&logo=google-apps-script&logoColor=white)](https://developers.google.com/apps-script) [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML) [![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple.svg)](https://getbootstrap.com/) [![API](https://img.shields.io/badge/API-Dados%20Abertos-blue.svg)](https://dadosabertos.compras.gov.br/) |
+| **Ano de Criação** | 2026 |
+| **Objetivo** | Facilitar a consulta, organização e consolidação de preços públicos obtidos na API de Dados Abertos do Compras.gov.br, oferecendo uma interface simples para pesquisa por CATMAT e CATSER e geração de relatórios auxiliares em PDF. |
+| **Principais Funcionalidades** | Consulta por código CATMAT/CATSER, filtro por período, tabela de resultados, modal de detalhamento da compra pública, seleção de múltiplas referências, carrinho de cotações com vários códigos, relatório PDF individual, relatório em lote e relatório multi-item. |
+| **Tipo de Implantação** | Aplicativo web independente em Google Apps Script, sem vínculo obrigatório com Google Sheets, Google Docs, Forms ou banco de dados. |
+| **Licença** | MIT |
+| **Acessar Projeto** | [LINK](https://github.com/noroefe/portfolio/tree/main/pesquisa_precos_API_GOV) |
+| **Demonstração** | [LINK](https://script.google.com/macros/s/AKfycbyVYYJZ2PmFPCKkCGpbwqY5OyjtxknEgvIuEe6xjxTvEnNvQzCqF8rCO2rXvmNAjFIi/exec) |
+| **Acessar README** | [LINK](https://github.com/noroefe/portfolio/blob/main/pesquisa_precos_API_GOV/README.md) |
+
+
